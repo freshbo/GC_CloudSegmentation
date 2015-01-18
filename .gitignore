@@ -11,6 +11,7 @@ CMakeCache.txt
 *.cache
 *.ilk
 *.log
+*.sdf
 [Bb]in
 [Dd]ebug*/
 *.sbr
