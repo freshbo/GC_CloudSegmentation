@@ -1,3 +1,4 @@
+CMakeCache.txt
 *.user
 *.aps
 *.pch
@@ -18,3 +19,8 @@ obj/
 _ReSharper*/
 *.ply
 *.dll
+[Cc][Mm]ake[Ff]iles*/
+*.cmake
+[Ii]pch*/
+x64*/
+VisualizerWidget.dir*/
