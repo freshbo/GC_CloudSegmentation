@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sun 18. Jan 12:29:43 2015
+** Created: Mon 19. Jan 00:00:38 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       7,   14, // methods
+       8,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -38,6 +38,7 @@ static const uint qt_meta_data_MainWindow[] = {
       83,   11,   11,   11, 0x0a,
      103,   11,   11,   11, 0x0a,
      117,   11,   11,   11, 0x0a,
+     124,   11,   11,   11, 0x0a,
 
        0        // eod
 };
@@ -46,7 +47,7 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0value\0pSliderValueChanged(int)\0"
     "loadPC()\0clearClouds()\0computeNormals()\0"
     "showCurvature(bool)\0triangulate()\0"
-    "exit()\0"
+    "test()\0exit()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -61,7 +62,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 3: _t->computeNormals(); break;
         case 4: _t->showCurvature((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 5: _t->triangulate(); break;
-        case 6: _t->exit(); break;
+        case 6: _t->test(); break;
+        case 7: _t->exit(); break;
         default: ;
         }
     }
@@ -99,9 +101,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 7)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 7;
+        _id -= 8;
     }
     return _id;
 }

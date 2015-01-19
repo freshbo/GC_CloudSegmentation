@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun 18. Jan 12:36:37 2015
+** Created: Sun 18. Jan 23:40:14 2015
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -61,6 +61,7 @@ public:
     QPushButton *computeTriangulation;
     QCheckBox *ShowMesh;
     QSpacerItem *horizontalSpacer;
+    QPushButton *testButton;
     QFrame *line_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -223,6 +224,11 @@ public:
 
         horizontalLayout->addItem(horizontalSpacer);
 
+        testButton = new QPushButton(centralWidget);
+        testButton->setObjectName(QString::fromUtf8("testButton"));
+
+        horizontalLayout->addWidget(testButton);
+
 
         verticalLayout->addLayout(horizontalLayout);
 
@@ -269,6 +275,7 @@ public:
         label_2->setText(QApplication::translate("MainWindow", "Triangulation", 0, QApplication::UnicodeUTF8));
         computeTriangulation->setText(QApplication::translate("MainWindow", "Calculate", 0, QApplication::UnicodeUTF8));
         ShowMesh->setText(QApplication::translate("MainWindow", "Show Mesh", 0, QApplication::UnicodeUTF8));
+        testButton->setText(QApplication::translate("MainWindow", "Test", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

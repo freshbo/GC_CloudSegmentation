@@ -65,9 +65,7 @@ namespace operation
 		pcl::PLYReader reader;
 		reader.read(path,*cloud,0);
 
-		std::cout<<"loadPLY: "<<cloud->points.size()<<std::endl;
-		
-		
+		//std::cout<<"loadPLY: "<<cloud->points.size()<<std::endl;
 		return ID;		
 	}
 
@@ -98,7 +96,7 @@ namespace operation
 		return;
 	}
 	 
-	void operation::colorizeDefault(PointCloudT::Ptr cloud)
+	void colorizeDefault(PointCloudT::Ptr cloud)
 	{
 		float maximum =cloud->points[0].z;
 		float minimum =cloud->points[0].z;
@@ -124,7 +122,6 @@ namespace operation
 		float curve_i;
 		float mini=1;
 		float maxi=0;
-		
 		
 		for(size_t i =0; i < normals->points.size(); i++)
 		{
@@ -155,7 +152,7 @@ namespace operation
 	}
 
 	//Triangulation
-	Mesh triangulation(PointCloudT::Ptr inputCloud,PointCloudN::Ptr normals)
+	Mesh PCLtriangulation(PointCloudT::Ptr inputCloud,PointCloudN::Ptr normals)
 	{
 		//INitialize Clouds
 		pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>());
@@ -194,11 +191,45 @@ namespace operation
 		std::vector<int> states = gp3.getPointStates();
 		
 		return triangles;
-		
-  
 	}
-	void binarySegmentation()
+
+
+	void CGALtriangulation_regular(void)
 	{
 
+		std::cout<<"START CGAL TRIANGULATION"<<std::endl;
+
+
+		 // construction from a list of points :
+		std::list<Point> L;
+		L.push_front(Point(0,0,0));
+		L.push_front(Point(1,0,0));
+		L.push_front(Point(0,1,0));
+		L.push_front(Point(0,1,1));
+		
+		Triangulation T(L.begin(), L.end());
+		
+		std::set<Simplex> simplices;
+		
+		Finite_vertices_iterator vit = T.finite_vertices_begin();
+		simplices.insert(Simplex(vit));
+		Finite_cells_iterator cit = T.finite_cells_begin();
+		simplices.insert(Simplex(cit));
+		Finite_edges_iterator eit = T.finite_edges_begin();
+		simplices.insert(Simplex(*eit));
+		Finite_facets_iterator fit = T.finite_facets_begin();
+		simplices.insert(Simplex(*fit));
+		
+
+		
+		for(Finite_edges_iterator ei= T.finite_edges_begin();ei!= T.finite_edges_end(); ei++)
+		{
+			/*Triangulation::Face& f = *(ei->first);
+			int i = ei->second;
+			Vertex vs = f.vertex(f.cw(i));
+			Vertex vt = f.vertex(f.ccw(i));*/
+	  }
+	
+		std::cout<<"END CGAL TRIANGULATION"<<std::endl;
 	}
 }

@@ -14,7 +14,7 @@ struct PCFrame
 	
 	PointCloudT::Ptr singleCloud;
 	PointCloudN::Ptr singleNormal;
-	string singleID;
+	boost::shared_ptr<string> singleID;
 
 
 };

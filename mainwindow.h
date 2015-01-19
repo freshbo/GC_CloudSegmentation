@@ -34,6 +34,7 @@ public slots:
 	void computeNormals(void);
 	void showCurvature(bool);
 	void triangulate(void);
+	void test(void);
 	void exit(void);
 	
 

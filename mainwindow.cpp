@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	connect (ui->computeCurvature,SIGNAL(released()),this,SLOT(computeNormals()));
 	connect (ui->computeTriangulation,SIGNAL(released()),this,SLOT(triangulate(void)));
 	connect (ui->ColorCode,SIGNAL(toggled(bool)),this,SLOT(showCurvature(bool)));
+	connect (ui->testButton,SIGNAL(released()),this,SLOT(test(void)));
 	connect (ui->actionExit,SIGNAL(triggered()),this,SLOT(exit(void)));
 
 	//Set Up VTK window
@@ -50,9 +51,10 @@ void MainWindow::pSliderValueChanged (int value)
 	This function lets me controll the Size of the Points
 	It is calles whenever the GUI-Slider is changed.
 	*/
-	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, value, Frame->singleID);
+	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, value, *Frame->singleID);
 	ui->qvtkWidget->update();
 }
+
 
 void MainWindow::loadPC(void)
 {
@@ -62,10 +64,13 @@ void MainWindow::loadPC(void)
 		
 	string ID = operation::loadPLY(path,Frame->singleCloud); //load PLY into cloud;
 	operation::colorizeDefault(Frame->singleCloud);
-	viewer->addPointCloud (Frame->singleCloud, Frame->singleID ); //add cloud to viewer with ID.
+	Frame->singleID.reset(new string(ID));
+	
+	viewer->addPointCloud (Frame->singleCloud, *Frame->singleID); //add cloud to viewer with ID.
 	viewer->resetCamera ();
 	ui->qvtkWidget->update (); //update viewer
 }
+
 
 void MainWindow::clearClouds(void)
 {
@@ -92,17 +97,21 @@ void MainWindow::showCurvature(bool checked)
 	else if(!checked)
 		operation::colorizeDefault(Frame->singleCloud);
 		
-
-	viewer->updatePointCloud (Frame->singleCloud, Frame->singleID); //update
+	std::cout<<*Frame->singleID<<std::endl;
+	viewer->updatePointCloud (Frame->singleCloud, *Frame->singleID); //update
 	ui->qvtkWidget->update();
 }
 
 void MainWindow::triangulate(void)
 {
 	std::cout<<"TRIANGULATE"<<std::endl;
-	Mesh triangles = operation::triangulation(Frame->singleCloud,Frame->singleNormal);
+	Mesh triangles = operation::PCLtriangulation(Frame->singleCloud,Frame->singleNormal);
 	viewer->addPolygonMesh(triangles,"Mesh");
 	ui->qvtkWidget->update();
+}
+void MainWindow::test(void)
+{
+	operation::CGALtriangulation_regular();
 }
 
 void MainWindow::exit()
