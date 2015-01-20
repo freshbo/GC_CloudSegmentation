@@ -445,13 +445,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClInclude Include="mainwindow.h" />
     <ClInclude Include="header.h" />
-    <ClInclude Include="MinCut.h" />
     <ClInclude Include="operation.h" />
     <ClInclude Include="PCFrame.h" />
     <ClInclude Include="ui_mainwindow.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
-    <ClCompile Include="MinCut.cpp" />
     <ClCompile Include="operation.cpp" />
     <ClCompile Include="PCFrame.cpp" />
     <ClCompile Include="VisualizerWidget_automoc.cpp" />

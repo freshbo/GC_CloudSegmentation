@@ -1,5 +1,8 @@
 #pragma once
 
+#include "operation.h"
+#include "PCFrame.h"
+
 //Qt
 #include <QtGui\qfiledialog.h>
 #include <QtGui\QMainWindow>
@@ -11,10 +14,6 @@
 #include <vtkRenderWindow.h>
 #include <pcl/visualization/pcl_visualizer.h>
 
-#include "operation.h"
-#include "PCFrame.h"
-
-#include "MinCut.h"
 
 namespace Ui 
 {

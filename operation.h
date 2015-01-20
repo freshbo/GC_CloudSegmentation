@@ -57,21 +57,20 @@ typedef Triangulation::Point Point;
 
 //Boost typedefs for Mincut
 using namespace boost;
-
 typedef int EdgeWeightType;
-
 typedef adjacency_list_traits < vecS, vecS, directedS > Traits;
 typedef adjacency_list < vecS, vecS, directedS,
-	property < vertex_name_t, std::string,
-	property < vertex_index_t, long,
-	property < vertex_color_t, boost::default_color_type,
-	property < vertex_distance_t, long,
-	property < vertex_predecessor_t, Traits::edge_descriptor > > > > >,
-	property < edge_capacity_t, EdgeWeightType,
-	property < edge_residual_capacity_t, EdgeWeightType,
-	property < edge_reverse_t, Traits::edge_descriptor > > > > Graph;
-	
-
+		property < vertex_name_t, std::string,
+		property < vertex_index_t, long,
+		property < vertex_color_t, boost::default_color_type,
+		property < vertex_distance_t, long,
+		property < vertex_predecessor_t, Traits::edge_descriptor > > > > >,
+		property < edge_capacity_t, EdgeWeightType,
+		property < edge_residual_capacity_t, EdgeWeightType,
+		property < edge_reverse_t, Traits::edge_descriptor > > > > Graph;
+typedef boost::property_map< Graph, boost::edge_residual_capacity_t >::type ResidualCapacityMap;
+typedef boost::property_map< Graph, boost::vertex_index_t >::type IndexMap;
+typedef boost::graph_traits< Graph >::out_edge_iterator OutEdgeIterator;
 
 
 namespace frameOperation
@@ -82,7 +81,6 @@ namespace frameOperation
 
 namespace operation
 {
-	
 	vector<float>		bernsteinDrei(float);
 	vector<float>		bernsteinZwei(float);
 	string 				loadPLY(std::string path,PointCloudT::Ptr);
@@ -98,12 +96,9 @@ namespace operation
 }
 
 
-
-
-
 //Segmentation Methods
-int cutIt(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,pcl::PointCloud<pcl::Normal>::Ptr);
-float unaryEdgeWeights(float Curvature,float &sourceWeight,float &sinkWeight);
+vector<pcl::PointIndices>cutIt(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,pcl::PointCloud<pcl::Normal>::Ptr);
+void					CalculateUnaryWeights(float Curvature,float &sourceWeight,float &sinkWeight);
 
 Traits::edge_descriptor AddEdge(Traits::vertex_descriptor &v1,
 								Traits::vertex_descriptor &v2,

@@ -1,5 +1,4 @@
 #include "operation.h"
-#include "MinCut.h"
 
 namespace frameOperation
 {
@@ -21,7 +20,7 @@ namespace frameOperation
 
 namespace operation
 {
-	vector<float> operation::bernsteinDrei(float x)
+	vector<float> bernsteinDrei(float x)
 	{
 		vector<float> result;
 
@@ -32,7 +31,7 @@ namespace operation
 		return result;
 	}
 
-		vector<float> operation::bernsteinZwei(float x)
+		vector<float> bernsteinZwei(float x)
 	{
 		vector<float> result;
 
@@ -262,7 +261,6 @@ namespace operation
 		//Graph for MaxFlow/MinCut
 		//GraphType *g = new GraphType(/*estimated # of nodes*/ pointCount * K, /*estimated # of edges*/ K);
 		float curvature; 
-		cout<<"Graph Initialized, Going to sleep"<<endl;
 	
 		//Fill Graph with nodes
 		for(int i =0; i<pointCount;i++)
@@ -280,7 +278,6 @@ namespace operation
 
 			//Search KNN
 			kdtree.nearestKSearch(searchPoint,K,pointIdxNKNSearch,pointNKNsquaredDistance);
-		
 			curvature = searchPointCurve.curvature;
 
 			/*
@@ -321,63 +318,102 @@ namespace operation
 }//end namespace operation
 
 
-int cutIt(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud ,pcl::PointCloud<pcl::Normal>::Ptr normals)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                               GRAPH SEGMENTATION                                               //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+vector<pcl::PointIndices> cutIt(PointCloudT::Ptr cloud , PointCloudN::Ptr normals)
 {
 	using namespace boost;
+
+	//Points to Work with;
+	PointT searchPoint;
+	PointN searchPointCurve;
+	PointN neighborPointCurve;
+	double curvature;
+	double curvature_neighbor;
+	
+	//KNN Parameters
+	int K = 10;
+	vector<int> pointIdxNKNSearch(K);
+	vector<float> pointNKNsquaredDistance(K);
+		
+	//KDTree + setInput
+	pcl::KdTreeFLANN<pcl::PointXYZRGBA> kdtree;
+	kdtree.setInputCloud (cloud);
+	
 
 	Graph g; //a graph with 0 vertices
  
 	property_map < Graph, edge_reverse_t >::type rev = get(edge_reverse, g);
 	
 	std::vector< Traits::vertex_descriptor> vertices_;	//Vector to save Nodes
-	Traits::vertex_descriptor vertex_descriptor(0);		//a single Node;
+	Traits::vertex_descriptor vertex_descriptor(0.0);		//a single Node;
 
 	int size = cloud->points.size();
 
 	vertices_.clear ();
 	vertices_.resize (size + 2, vertex_descriptor);     //allocate memory for all nodes + sink and source
-	
-		
 	Traits::vertex_descriptor source = add_vertex(g);	//Create Sink and source
-	Traits::vertex_descriptor sink = add_vertex(g);		
+	Traits::vertex_descriptor sink = add_vertex(g);
 
-	for (int i=0;i<size;i++)
-	{
+
+	for (int i=0;i<size;i++){
+		curvature = normals->points[i].curvature;
 		vertices_[i] = add_vertex(g);
+		AddEdge(source,vertices_[i],rev,static_cast<double>(curvature)*10,g);
+		AddEdge(sink,vertices_[i],rev,static_cast<double>(1-curvature)*10,g);
 	}
 
-
-
-	for (int i=0; i<size;i++)
-	{
-		AddEdge(vertices_[i],vertices_[i+1],rev, 120 ,g);
+	for (int i=0; i<size;i++){
+		searchPoint = cloud->points[i];
+		//Search KNN for point i
+		kdtree.nearestKSearch(searchPoint,K,pointIdxNKNSearch,pointNKNsquaredDistance);
+		curvature = searchPointCurve.curvature;
+		//Walk through NKN
+		for(int j =0; j<pointIdxNKNSearch.size (); j++){
+			curvature_neighbor = (double)normals->points[pointIdxNKNSearch[j]].curvature*10;
+			AddEdge(vertices_[i],vertices_[j],rev,(double)abs(curvature-curvature_neighbor)*10,g);
+		}
 	}
 
-
-
-	AddEdge(source,vertices_[0],rev,100,g);
-	AddEdge(vertices_[size],sink,rev,50,g);
-	
-
+	IndexMap index_map = boost::get (boost::vertex_index, g);
+	ResidualCapacityMap residual_capacity = boost::get (boost::edge_residual_capacity, g);
 
 	//find min cut
-	EdgeWeightType flow = boykov_kolmogorov_max_flow(g, source, sink); // a list of sources will be returned in s, and a list of sinks will be returned in t
-	//EdgeWeightType flow = push_relabel_max_flow(g, v0, v3); // a list of sources will be returned in s, and a list of sinks will be returned in t
+	double flow = boykov_kolmogorov_max_flow(g, source, sink); // a list of sources will be returned in s, and a list of sinks will be returned in t
+	//EdgeWeightType flow = push_relabel_max_flow(g, source, sink); // a list of sources will be returned in s, and a list of sinks will be returned in t
 	//EdgeWeightType flow = edmunds_karp_max_flow(g, v0, v3); // a list of sources will be returned in s, and a list of sinks will be returned in t
  
 	std::cout << "Max flow is: " << flow << std::endl;
- 
-	property_map<Graph, edge_capacity_t>::type
-			capacity = get(edge_capacity, g);
-	property_map<Graph, edge_residual_capacity_t>::type
-			residual_capacity = get(edge_residual_capacity, g);
- 
- 
-	graph_traits<Graph>::vertex_iterator u_iter, u_end;
-	graph_traits<Graph>::out_edge_iterator ei, e_end;
+	
 
+	std::vector<pcl::PointIndices> clusters_;
 
-	return 0;
+	std::vector<int> labels;
+	labels.resize (cloud->points.size (), 0);
+	int number_of_indices = static_cast<int> (cloud->points.size ());
+	for (int i_point = 0; i_point < number_of_indices; i_point++)
+		labels[i_point] = 1;
+
+	clusters_.clear ();
+  
+	pcl::PointIndices segment;
+	clusters_.resize (2, segment);
+
+	OutEdgeIterator edge_iter, edge_end;
+	for ( boost::tie (edge_iter, edge_end) = boost::out_edges (source, g); edge_iter != edge_end; edge_iter++ )
+	{
+		if (labels[edge_iter->m_target] == 1)
+		{
+			if (residual_capacity[*edge_iter] > 0.01)
+				clusters_[1].indices.push_back (static_cast<int> (edge_iter->m_target));
+			else
+				clusters_[0].indices.push_back (static_cast<int> (edge_iter->m_target));
+		}
+	}
+	
+
+	return clusters_;
 }
 
 Traits::edge_descriptor AddEdge(Traits::vertex_descriptor &v1,
@@ -395,3 +431,12 @@ Traits::edge_descriptor AddEdge(Traits::vertex_descriptor &v1,
 
 	return e1;
 }
+
+void CalculateUnaryWeights(float curvature, float& sourceWeight, float& sinkWeight)
+{
+
+
+	return;
+}
+
+

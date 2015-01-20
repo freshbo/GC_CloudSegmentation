@@ -111,8 +111,11 @@ void MainWindow::triangulate(void)
 }
 void MainWindow::test(void)
 {
-	
-	cutIt(Frame->singleCloud,Frame->singleNormal);
+	vector<pcl::PointIndices> indices = cutIt(Frame->singleCloud,Frame->singleNormal);
+	for(int i=0;i<indices[1].indices.size();i++)
+	{
+		std::cout<<indices[1].indices[i]<<std::endl;
+	}
 
 	viewer->updatePointCloud (Frame->singleCloud, *Frame->singleID); //update
 	ui->qvtkWidget->update();
