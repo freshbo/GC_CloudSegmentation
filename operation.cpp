@@ -162,7 +162,7 @@ namespace operation
 		pcl::copyPointCloud(*inputCloud,*cloud);
 		pcl::PointCloud<pcl::PointNormal>::Ptr cloud_with_normals(new pcl::PointCloud<pcl::PointNormal>());
 		pcl::concatenateFields(*cloud,*normals,*cloud_with_normals);
-				
+		
 		// Create search tree*
 		pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
 		tree2->setInputCloud (cloud_with_normals);
@@ -312,4 +312,4 @@ namespace operation
 			}
 		}
 	}
-}
+}//end namespace operation

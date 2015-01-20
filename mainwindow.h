@@ -14,6 +14,8 @@
 #include "operation.h"
 #include "PCFrame.h"
 
+#include "MinCut.h"
+
 namespace Ui 
 {
 class MainWindow;

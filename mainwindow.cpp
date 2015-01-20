@@ -112,7 +112,12 @@ void MainWindow::triangulate(void)
 void MainWindow::test(void)
 {
 	
-	operation::MaxFlow(Frame->singleCloud,Frame->singleNormal);
+	//operation::MaxFlow(Frame->singleCloud,Frame->singleNormal);
+	//pcl::PointCloud<pcl::PointNormal>::Ptr cloud_with_normals(new pcl::PointCloud<pcl::PointNormal>());
+	//pcl::concatenateFields(*Frame->singleCloud,*Frame->singleNormal,*cloud_with_normals);
+
+	cutIt();
+
 	viewer->updatePointCloud (Frame->singleCloud, *Frame->singleID); //update
 	ui->qvtkWidget->update();
 }
