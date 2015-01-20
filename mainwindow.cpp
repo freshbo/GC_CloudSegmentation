@@ -82,7 +82,7 @@ void MainWindow::computeNormals(void)
 {
 	std::cout<<"compute Normals"<<std::endl;
 	operation::calcNormals(Frame->singleCloud,Frame->singleNormal);
-	operation::colorizeDefault(Frame->singleCloud);
+	operation::linearizeCurvature(Frame->singleNormal);
 	ui->ColorCode->setEnabled(true);
 
 	//ui->rButton_Curvature->click();
@@ -112,11 +112,7 @@ void MainWindow::triangulate(void)
 void MainWindow::test(void)
 {
 	
-	//operation::MaxFlow(Frame->singleCloud,Frame->singleNormal);
-	//pcl::PointCloud<pcl::PointNormal>::Ptr cloud_with_normals(new pcl::PointCloud<pcl::PointNormal>());
-	//pcl::concatenateFields(*Frame->singleCloud,*Frame->singleNormal,*cloud_with_normals);
-
-	cutIt();
+	cutIt(Frame->singleCloud,Frame->singleNormal);
 
 	viewer->updatePointCloud (Frame->singleCloud, *Frame->singleID); //update
 	ui->qvtkWidget->update();

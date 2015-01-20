@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math.h>
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include <list>
@@ -25,7 +26,14 @@
 #include <CGAL/Delaunay_triangulation_3.h>
 #include <CGAL/Regular_triangulation_3.h>
 
-//PCL Typedefs for Point Clouds
+//Boost Min Cut
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/boykov_kolmogorov_max_flow.hpp>
+#include <boost/graph/push_relabel_max_flow.hpp>
+#include <boost/graph/edmonds_karp_max_flow.hpp>
+
+
+//PCL typedefs for Point Clouds
 typedef pcl::PointXYZRGBA					PointT;
 typedef pcl::PointCloud<PointT>				PointCloudT;
 typedef pcl::Normal							PointN;
@@ -34,7 +42,9 @@ typedef pcl::PointNormal					PointNP;
 typedef pcl::PointCloud<PointNP>			PointCloudNP;
 typedef pcl::PolygonMesh					Mesh;
 
-// CGAL Typedefs for Triangulation
+
+
+// CGAL typedefs for Triangulation
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef CGAL::Triangulation_3<K> Triangulation;
 typedef Triangulation::Finite_vertices_iterator Finite_vertices_iterator;
@@ -44,6 +54,23 @@ typedef Triangulation::Finite_cells_iterator Finite_cells_iterator;
 typedef Triangulation::Simplex Simplex;
 typedef Triangulation::Locate_type Locate_type;
 typedef Triangulation::Point Point;
+
+//Boost typedefs for Mincut
+using namespace boost;
+
+typedef int EdgeWeightType;
+
+typedef adjacency_list_traits < vecS, vecS, directedS > Traits;
+typedef adjacency_list < vecS, vecS, directedS,
+	property < vertex_name_t, std::string,
+	property < vertex_index_t, long,
+	property < vertex_color_t, boost::default_color_type,
+	property < vertex_distance_t, long,
+	property < vertex_predecessor_t, Traits::edge_descriptor > > > > >,
+	property < edge_capacity_t, EdgeWeightType,
+	property < edge_residual_capacity_t, EdgeWeightType,
+	property < edge_reverse_t, Traits::edge_descriptor > > > > Graph;
+	
 
 
 
@@ -55,10 +82,12 @@ namespace frameOperation
 
 namespace operation
 {
+	
 	vector<float>		bernsteinDrei(float);
 	vector<float>		bernsteinZwei(float);
 	string 				loadPLY(std::string path,PointCloudT::Ptr);
 	void				calcNormals(PointCloudT::Ptr cloud,PointCloudN::Ptr);
+	void				linearizeCurvature(PointCloudN::Ptr);
 	void				colorizeDefault(PointCloudT::Ptr);
 	void				curvatureColorMap(PointCloudN::Ptr curve, PointCloudT::Ptr cloud);
 	//Triangulations
@@ -68,8 +97,19 @@ namespace operation
 	void				MaxFlow(PointCloudT::Ptr,PointCloudN::Ptr);
 }
 
-namespace segmentation
-{
 
 
-}
+
+
+//Segmentation Methods
+int cutIt(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,pcl::PointCloud<pcl::Normal>::Ptr);
+float unaryEdgeWeights(float Curvature,float &sourceWeight,float &sinkWeight);
+
+Traits::edge_descriptor AddEdge(Traits::vertex_descriptor &v1,
+								Traits::vertex_descriptor &v2,
+								property_map < Graph, edge_reverse_t >::type &rev,
+								const double capacity,
+								Graph &g);
+
+
+
