@@ -127,6 +127,9 @@ namespace operation
 		{
 			//linearize Curvature values.
 			curve_i =(-1)* log(max(normals->points.at(i).curvature,c_p));
+			/*
+			CURVATURE LINEARIZATION!!
+			*/
 			
 			if(curve_i<mini)
 							mini=curve_i;
@@ -231,5 +234,82 @@ namespace operation
 	  }
 	
 		std::cout<<"END CGAL TRIANGULATION"<<std::endl;
+	}
+	void MaxFlow(PointCloudT::Ptr cloud, PointCloudN::Ptr curve)
+	{
+		
+		//Points to Work with;
+		PointT searchPoint;
+		PointN searchPointCurve;
+		PointN neighborPointCurve;
+	
+		//KNN Parameters
+		int K = 10;
+		vector<int> pointIdxNKNSearch(K);
+		vector<float> pointNKNsquaredDistance(K);
+		int pointCount = cloud->size();
+	
+		//KDTree + setInput
+		pcl::KdTreeFLANN<pcl::PointXYZRGBA> kdtree;
+		kdtree.setInputCloud (cloud);
+	
+		//Graph for MaxFlow/MinCut
+		//GraphType *g = new GraphType(/*estimated # of nodes*/ pointCount * K, /*estimated # of edges*/ K);
+		float curvature; 
+		cout<<"Graph Initialized, Going to sleep"<<endl;
+	
+		//Fill Graph with nodes
+		for(int i =0; i<pointCount;i++)
+		{
+			//g->add_node(i);
+		}
+		cout<<"NODES BUILT"<<endl;
+
+		// For each Point i search K-NN j
+		for(int i=0; i< pointCount; i++)
+		{
+			//Set working Points
+			searchPoint = cloud->points[i];
+			searchPointCurve = curve->points[i];
+
+			//Search KNN
+			kdtree.nearestKSearch(searchPoint,K,pointIdxNKNSearch,pointNKNsquaredDistance);
+		
+			curvature = searchPointCurve.curvature;
+
+			/*
+			CALCULATE PROBABILITY OF BELONGING TO SOURCE OR SINK
+			*/
+			
+
+			//SET T-Links to Source and Sink
+			//g->add_tweights(i,curvature,curvature);
+			cout<<curvature<<endl;
+		
+			for(int j =0; j<pointIdxNKNSearch.size (); j++)
+			{
+				neighborPointCurve = curve->at(j);
+				//g->add_edge(i,j,curvature,curvature);
+
+			}
+		}
+		//float flow = g->maxflow();
+
+		for(int i=0;i<pointCount;i++)
+		{
+			//if (g->what_segment(i) == GraphType::SOURCE)
+			{
+				//cout<<i<<" SOURCE"<<endl;
+				cloud->points[i].r = 128;
+				cloud->points[i].g = 128;
+				cloud->points[i].b = 128;
+			}
+			//else
+			{
+				cloud->points[i].r = 255;
+				cloud->points[i].g = 255;
+				cloud->points[i].b = 255;
+			}
+		}
 	}
 }

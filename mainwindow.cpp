@@ -111,7 +111,10 @@ void MainWindow::triangulate(void)
 }
 void MainWindow::test(void)
 {
-	operation::CGALtriangulation_regular();
+	
+	operation::MaxFlow(Frame->singleCloud,Frame->singleNormal);
+	viewer->updatePointCloud (Frame->singleCloud, *Frame->singleID); //update
+	ui->qvtkWidget->update();
 }
 
 void MainWindow::exit()

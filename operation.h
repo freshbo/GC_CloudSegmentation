@@ -25,6 +25,9 @@
 #include <CGAL/Delaunay_triangulation_3.h>
 #include <CGAL/Regular_triangulation_3.h>
 
+//Min Cut
+#include <boost\graph\edmonds_karp_max_flow.hpp>
+#include <boost\graph\stoer_wagner_min_cut.hpp>
 
 
 typedef pcl::PointXYZRGBA				PointT;
@@ -44,6 +47,7 @@ typedef Triangulation::Simplex Simplex;
 typedef Triangulation::Locate_type Locate_type;
 typedef Triangulation::Point Point;
 
+
 namespace frameOperation
 {
 	void				loadSequence(std::string filePath);
@@ -61,5 +65,6 @@ namespace operation
 	//Triangulations
 	Mesh				PCLtriangulation(PointCloudT::Ptr,PointCloudN::Ptr);
 	void				CGALtriangulation_regular(void);
-	
+	//MIN-Cut
+	void				MaxFlow(PointCloudT::Ptr,PointCloudN::Ptr);
 }
