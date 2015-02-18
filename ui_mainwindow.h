@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun 18. Jan 23:40:14 2015
+** Created: Wed 18. Feb 21:46:52 2015
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -20,6 +20,7 @@
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
@@ -51,17 +52,27 @@ public:
     QVTKWidget *qvtkWidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
-    QVBoxLayout *verticalLayout_4;
+    QVBoxLayout *GeneralLAYOUT;
+    QLabel *label_3;
+    QPushButton *loadButton;
+    QPushButton *cleanButton;
+    QPushButton *testButton;
+    QFrame *line_4;
+    QVBoxLayout *CurvatureLAYOUT;
     QLabel *label;
     QPushButton *computeCurvature;
     QCheckBox *ColorCode;
     QFrame *line_3;
     QVBoxLayout *verticalLayout_3;
+    QLabel *label_4;
+    QPushButton *pushButton;
+    QLineEdit *lineEdit;
+    QFrame *line_5;
+    QVBoxLayout *TriangulationLAYOUT;
     QLabel *label_2;
     QPushButton *computeTriangulation;
     QCheckBox *ShowMesh;
     QSpacerItem *horizontalSpacer;
-    QPushButton *testButton;
     QFrame *line_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -71,7 +82,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1048, 600);
+        MainWindow->resize(1048, 598);
         MainWindow->setMinimumSize(QSize(300, 100));
         actionLoad = new QAction(MainWindow);
         actionLoad->setObjectName(QString::fromUtf8("actionLoad"));
@@ -149,9 +160,42 @@ public:
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        verticalLayout_4 = new QVBoxLayout();
-        verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        GeneralLAYOUT = new QVBoxLayout();
+        GeneralLAYOUT->setSpacing(6);
+        GeneralLAYOUT->setObjectName(QString::fromUtf8("GeneralLAYOUT"));
+        label_3 = new QLabel(centralWidget);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        GeneralLAYOUT->addWidget(label_3);
+
+        loadButton = new QPushButton(centralWidget);
+        loadButton->setObjectName(QString::fromUtf8("loadButton"));
+
+        GeneralLAYOUT->addWidget(loadButton);
+
+        cleanButton = new QPushButton(centralWidget);
+        cleanButton->setObjectName(QString::fromUtf8("cleanButton"));
+
+        GeneralLAYOUT->addWidget(cleanButton);
+
+        testButton = new QPushButton(centralWidget);
+        testButton->setObjectName(QString::fromUtf8("testButton"));
+
+        GeneralLAYOUT->addWidget(testButton);
+
+
+        horizontalLayout->addLayout(GeneralLAYOUT);
+
+        line_4 = new QFrame(centralWidget);
+        line_4->setObjectName(QString::fromUtf8("line_4"));
+        line_4->setFrameShape(QFrame::VLine);
+        line_4->setFrameShadow(QFrame::Sunken);
+
+        horizontalLayout->addWidget(line_4);
+
+        CurvatureLAYOUT = new QVBoxLayout();
+        CurvatureLAYOUT->setSpacing(6);
+        CurvatureLAYOUT->setObjectName(QString::fromUtf8("CurvatureLAYOUT"));
         label = new QLabel(centralWidget);
         label->setObjectName(QString::fromUtf8("label"));
         QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -161,7 +205,7 @@ public:
         label->setSizePolicy(sizePolicy1);
         label->setLayoutDirection(Qt::LeftToRight);
 
-        verticalLayout_4->addWidget(label);
+        CurvatureLAYOUT->addWidget(label);
 
         computeCurvature = new QPushButton(centralWidget);
         computeCurvature->setObjectName(QString::fromUtf8("computeCurvature"));
@@ -174,24 +218,18 @@ public:
         computeCurvature->setFont(font);
         computeCurvature->setIconSize(QSize(30, 16));
 
-        verticalLayout_4->addWidget(computeCurvature);
+        CurvatureLAYOUT->addWidget(computeCurvature);
 
         ColorCode = new QCheckBox(centralWidget);
         ColorCode->setObjectName(QString::fromUtf8("ColorCode"));
 
-        verticalLayout_4->addWidget(ColorCode);
+        CurvatureLAYOUT->addWidget(ColorCode);
 
 
-        horizontalLayout->addLayout(verticalLayout_4);
+        horizontalLayout->addLayout(CurvatureLAYOUT);
 
         line_3 = new QFrame(centralWidget);
         line_3->setObjectName(QString::fromUtf8("line_3"));
-        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(line_3->sizePolicy().hasHeightForWidth());
-        line_3->setSizePolicy(sizePolicy2);
-        line_3->setMinimumSize(QSize(0, 100));
         line_3->setFrameShape(QFrame::VLine);
         line_3->setFrameShadow(QFrame::Sunken);
 
@@ -200,34 +238,66 @@ public:
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setSpacing(6);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        label_4 = new QLabel(centralWidget);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+        sizePolicy1.setHeightForWidth(label_4->sizePolicy().hasHeightForWidth());
+        label_4->setSizePolicy(sizePolicy1);
+
+        verticalLayout_3->addWidget(label_4);
+
+        pushButton = new QPushButton(centralWidget);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+
+        verticalLayout_3->addWidget(pushButton);
+
+        lineEdit = new QLineEdit(centralWidget);
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        QSizePolicy sizePolicy2(QSizePolicy::Ignored, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
+        lineEdit->setSizePolicy(sizePolicy2);
+        lineEdit->setMaxLength(3);
+        lineEdit->setReadOnly(false);
+
+        verticalLayout_3->addWidget(lineEdit);
+
+
+        horizontalLayout->addLayout(verticalLayout_3);
+
+        line_5 = new QFrame(centralWidget);
+        line_5->setObjectName(QString::fromUtf8("line_5"));
+        line_5->setFrameShape(QFrame::VLine);
+        line_5->setFrameShadow(QFrame::Sunken);
+
+        horizontalLayout->addWidget(line_5);
+
+        TriangulationLAYOUT = new QVBoxLayout();
+        TriangulationLAYOUT->setSpacing(6);
+        TriangulationLAYOUT->setObjectName(QString::fromUtf8("TriangulationLAYOUT"));
         label_2 = new QLabel(centralWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         sizePolicy1.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
         label_2->setSizePolicy(sizePolicy1);
 
-        verticalLayout_3->addWidget(label_2);
+        TriangulationLAYOUT->addWidget(label_2);
 
         computeTriangulation = new QPushButton(centralWidget);
         computeTriangulation->setObjectName(QString::fromUtf8("computeTriangulation"));
 
-        verticalLayout_3->addWidget(computeTriangulation);
+        TriangulationLAYOUT->addWidget(computeTriangulation);
 
         ShowMesh = new QCheckBox(centralWidget);
         ShowMesh->setObjectName(QString::fromUtf8("ShowMesh"));
 
-        verticalLayout_3->addWidget(ShowMesh);
+        TriangulationLAYOUT->addWidget(ShowMesh);
 
 
-        horizontalLayout->addLayout(verticalLayout_3);
+        horizontalLayout->addLayout(TriangulationLAYOUT);
 
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout->addItem(horizontalSpacer);
-
-        testButton = new QPushButton(centralWidget);
-        testButton->setObjectName(QString::fromUtf8("testButton"));
-
-        horizontalLayout->addWidget(testButton);
 
 
         verticalLayout->addLayout(horizontalLayout);
@@ -269,13 +339,20 @@ public:
         actionLoad->setText(QApplication::translate("MainWindow", "Load", 0, QApplication::UnicodeUTF8));
         actionExit->setText(QApplication::translate("MainWindow", "Exit", 0, QApplication::UnicodeUTF8));
         actionClear_Clouds->setText(QApplication::translate("MainWindow", "Clear Clouds", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("MainWindow", "PointCloud", 0, QApplication::UnicodeUTF8));
+        loadButton->setText(QApplication::translate("MainWindow", "Load", 0, QApplication::UnicodeUTF8));
+        cleanButton->setText(QApplication::translate("MainWindow", "Clean", 0, QApplication::UnicodeUTF8));
+        testButton->setText(QApplication::translate("MainWindow", "Test", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Curvature", 0, QApplication::UnicodeUTF8));
         computeCurvature->setText(QApplication::translate("MainWindow", "Calculate", 0, QApplication::UnicodeUTF8));
         ColorCode->setText(QApplication::translate("MainWindow", "Color Code", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("MainWindow", "DownSampling", 0, QApplication::UnicodeUTF8));
+        pushButton->setText(QApplication::translate("MainWindow", "Sample", 0, QApplication::UnicodeUTF8));
+        lineEdit->setText(QString());
+        lineEdit->setPlaceholderText(QString());
         label_2->setText(QApplication::translate("MainWindow", "Triangulation", 0, QApplication::UnicodeUTF8));
         computeTriangulation->setText(QApplication::translate("MainWindow", "Calculate", 0, QApplication::UnicodeUTF8));
         ShowMesh->setText(QApplication::translate("MainWindow", "Show Mesh", 0, QApplication::UnicodeUTF8));
-        testButton->setText(QApplication::translate("MainWindow", "Test", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

@@ -12,6 +12,9 @@
 #include <pcl/point_types.h>
 #include <pcl/io/ply_io.h>
 
+//Outlier Removal
+#include <pcl/filters/statistical_outlier_removal.h>
+
 //Curvature
 #include <pcl/common/pca.h>
 #include <pcl/kdtree/kdtree_flann.h>
@@ -41,8 +44,6 @@ typedef pcl::PointCloud<PointN>				PointCloudN;
 typedef pcl::PointNormal					PointNP;
 typedef pcl::PointCloud<PointNP>			PointCloudNP;
 typedef pcl::PolygonMesh					Mesh;
-
-
 
 // CGAL typedefs for Triangulation
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
@@ -84,6 +85,7 @@ namespace operation
 	vector<float>		bernsteinDrei(float);
 	vector<float>		bernsteinZwei(float);
 	string 				loadPLY(std::string path,PointCloudT::Ptr);
+    void                outlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 	void				calcNormals(PointCloudT::Ptr cloud,PointCloudN::Ptr);
 	void				linearizeCurvature(PointCloudN::Ptr);
 	void				colorizeDefault(PointCloudT::Ptr);

@@ -31,6 +31,7 @@ public:
 public slots:
 	void pSliderValueChanged (int value);
 	void loadPC(void);
+	void cleanPC(void);
 	void clearClouds(void);
 	void computeNormals(void);
 	void showCurvature(bool);

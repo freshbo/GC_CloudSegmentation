@@ -1,0 +1,72 @@
+// Grober Aufbau / Ablauf des Programms:
+    
+    programm start;
+
+    if (keine Argumente beim Start übergeben wurde)
+
+    init GUI
+
+    warte bis Frame (PC1,PC2,PC3,PC4,.....)  eingeladen wurde. -> Frame[i] = Point Clouds //welche point clouds? willst du hier mehrere pointclouds gleichzeitig laden und eine schleife über alle machen?
+
+    else (Frame = arg)
+
+//Start Forward analysis: 
+
+    for all i{
+
+    PC = Frame[i];
+
+    calculateCurvature(PC); //PointCloudEdit
+
+    {PCl, PCs} = binaryClassification(PC) //PCl=PointCloudleaf; PCs=PointCloudstem
+
+    ClassifyMultiLeaf(PCl)
+
+    ClassifyMultiStem(PCs)
+
+    if (Leafcount != leafcount i-1) // nicht unbedingt ungleich berechnen, es gibt blätter die du als solche in diesem schritt noch nicht unbedingt erkennen kannst. was passiert wenn du ein blatt schon erkannt hast und es dann nicht mehr erkannt wird? (z.b. ein verfallendes blatt)
+
+    \\Backwards analysis
+
+    while (! event found) // achtung, eventuell findest du das event nicht in der backwards analyse und brauchst weitere forward schritte. 
+
+    traceBack frame;
+
+    ClassifyMultiLeaf(PCl) betrachte auch die Ergebnisse aus vorherigen läufen. (Eingabe an die Klasse)
+
+    ClassifyMultiStem(PCs) //mit neuer Hypothesis
+
+    }
+
+    
+    
+    
+    
+Klassen:
+    
+    GUI /Visualisierung{
+        }
+        
+  Hypothesis{
+      int leafCount;
+      int StemCoun;
+   }
+   PointCloud{
+       bool class;
+       organNr.
+    }
+    
+    Frame{
+        vector<pointClouds>
+    }
+    
+    PointCloudEdit{
+        Curvature();
+        Triangulation(); // voronoi triangulation (3mm)?  auf welcher Basis (Gitter; KNN; Voronoi; MST; ...) berechnest Du die curvature? 
+    }
+        
+    Classification{ //unterscheidest Du verschiedene Classifications? (siehe oben) 
+        -binaryGraphCut()
+        -multiLabeling()
+    }
+    

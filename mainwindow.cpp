@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	
 	//Connect SIGNALS and SLOTS
 	connect (ui->actionLoad,SIGNAL(triggered()),this,SLOT(loadPC()));
+    connect (ui->loadButton,SIGNAL(released()),this,SLOT(loadPC()));
+    connect (ui->cleanButton,SIGNAL(released()),this,SLOT(cleanPC()));
 	connect (ui->horizontalSlider_p, SIGNAL (valueChanged (int)), this, SLOT (pSliderValueChanged (int)));
 	connect (ui->actionClear_Clouds,SIGNAL(triggered()),this,SLOT(clearClouds()));
 	connect (ui->computeCurvature,SIGNAL(released()),this,SLOT(computeNormals()));
@@ -71,6 +73,22 @@ void MainWindow::loadPC(void)
 	ui->qvtkWidget->update (); //update viewer
 }
 
+void MainWindow::cleanPC(void)
+{
+    pcl::PointCloud<pcl::PointXYZ>::Ptr tmpIN(new pcl::PointCloud<pcl::PointXYZ>());
+    pcl::copyPointCloud(*Frame->singleCloud,*tmpIN);
+
+    cout<<tmpIN->size()<<endl;
+    operation::outlierRemoval(tmpIN);
+    cout<<tmpIN->size()<<endl;
+
+    Frame->singleCloud->clear();
+    pcl::copyPointCloud(*tmpIN,*Frame->singleCloud);
+    operation::colorizeDefault(Frame->singleCloud);
+    cout<<Frame->singleCloud->size()<<endl;
+	viewer->updatePointCloud (Frame->singleCloud, *Frame->singleID); //update
+    ui->qvtkWidget->update();
+}
 
 void MainWindow::clearClouds(void)
 {

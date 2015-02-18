@@ -67,7 +67,21 @@ namespace operation
 		//std::cout<<"loadPLY: "<<cloud->points.size()<<std::endl;
 		return ID;		
 	}
+	
+	void outlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+    {
+        pcl::PointCloud<pcl::PointXYZ>::Ptr tmpOUT(new pcl::PointCloud<pcl::PointXYZ>());
+        pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
+        sor.setInputCloud(cloud);
+        sor.setMeanK(500);
+        sor.setStddevMulThresh(10);
+        sor.filter(*tmpOUT);
+        cloud->clear();
+        pcl::copyPointCloud(*tmpOUT,*cloud);
 
+
+        return;
+    }
 	 void calcNormals(PointCloudT::Ptr cloud, PointCloudN::Ptr normals)
 	{
 		std::cout<<"Start Normal Calculation"<<std::endl;
@@ -86,7 +100,7 @@ namespace operation
 
 		// Use all neighbors in a sphere of radius 3cm
 		//ne.setRadiusSearch (10);
-		ne.setKSearch(1000);
+		ne.setKSearch(200);
 		
 		// Compute the features
 		ne.compute (*normals);
@@ -158,7 +172,6 @@ namespace operation
 
 		return;
 	}
-
 	//Triangulation
 	Mesh PCLtriangulation(PointCloudT::Ptr inputCloud,PointCloudN::Ptr normals)
 	{
@@ -416,6 +429,8 @@ vector<pcl::PointIndices> cutIt(PointCloudT::Ptr cloud , PointCloudN::Ptr normal
 	return clusters_;
 }
 
+
+
 Traits::edge_descriptor AddEdge(Traits::vertex_descriptor &v1,
 	Traits::vertex_descriptor &v2, 
 	property_map < Graph, edge_reverse_t >::type &rev, 
@@ -438,5 +453,4 @@ void CalculateUnaryWeights(float curvature, float& sourceWeight, float& sinkWeig
 
 	return;
 }
-
 
