@@ -10,12 +10,16 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	connect (ui->actionLoad,SIGNAL(triggered()),this,SLOT(loadPC()));
     connect (ui->loadButton,SIGNAL(released()),this,SLOT(loadPC()));
     connect (ui->cleanButton,SIGNAL(released()),this,SLOT(cleanPC()));
-	connect (ui->horizontalSlider_p, SIGNAL (valueChanged (int)), this, SLOT (pSliderValueChanged (int)));
-	connect (ui->actionClear_Clouds,SIGNAL(triggered()),this,SLOT(clearClouds()));
-	connect (ui->computeCurvature,SIGNAL(released()),this,SLOT(computeNormals()));
-	connect (ui->computeTriangulation,SIGNAL(released()),this,SLOT(triangulate(void)));
-	connect (ui->ColorCode,SIGNAL(toggled(bool)),this,SLOT(showCurvature(bool)));
 	connect (ui->testButton,SIGNAL(released()),this,SLOT(test(void)));
+
+	connect (ui->computeCurvature,SIGNAL(released()),this,SLOT(computeNormals()));
+	connect (ui->ColorCode,SIGNAL(toggled(bool)),this,SLOT(showCurvature(bool)));
+	connect (ui->sampleButton,SIGNAL(released()),this,SLOT(downsample()));
+	connect (ui->computeTriangulation,SIGNAL(released()),this,SLOT(triangulate(void)));
+	
+	connect (ui->horizontalSlider_p, SIGNAL (valueChanged (int)), this, SLOT (pSliderValueChanged (int)));
+	
+	connect (ui->actionClear_Clouds,SIGNAL(triggered()),this,SLOT(clearClouds()));
 	connect (ui->actionExit,SIGNAL(triggered()),this,SLOT(exit(void)));
 
 	//Set Up VTK window
@@ -88,6 +92,14 @@ void MainWindow::cleanPC(void)
     cout<<Frame->singleCloud->size()<<endl;
 	viewer->updatePointCloud (Frame->singleCloud, *Frame->singleID); //update
     ui->qvtkWidget->update();
+}
+
+void downsample()
+{
+	pcl::PointCloud<pcl::PointXYZ>::Ptr tmpIN(new pcl::PointCloud<pcl::PointXYZ>());
+    pcl::copyPointCloud(*Frame->singleCloud,*tmpIN);
+
+	operation::downsample(tmpIN);
 }
 
 void MainWindow::clearClouds(void)

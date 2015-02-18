@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed 18. Feb 21:46:52 2015
+** Created: Wed 18. Feb 22:23:25 2015
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -65,7 +65,7 @@ public:
     QFrame *line_3;
     QVBoxLayout *verticalLayout_3;
     QLabel *label_4;
-    QPushButton *pushButton;
+    QPushButton *sampleButton;
     QLineEdit *lineEdit;
     QFrame *line_5;
     QVBoxLayout *TriangulationLAYOUT;
@@ -245,10 +245,10 @@ public:
 
         verticalLayout_3->addWidget(label_4);
 
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        sampleButton = new QPushButton(centralWidget);
+        sampleButton->setObjectName(QString::fromUtf8("sampleButton"));
 
-        verticalLayout_3->addWidget(pushButton);
+        verticalLayout_3->addWidget(sampleButton);
 
         lineEdit = new QLineEdit(centralWidget);
         lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
@@ -347,7 +347,7 @@ public:
         computeCurvature->setText(QApplication::translate("MainWindow", "Calculate", 0, QApplication::UnicodeUTF8));
         ColorCode->setText(QApplication::translate("MainWindow", "Color Code", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainWindow", "DownSampling", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "Sample", 0, QApplication::UnicodeUTF8));
+        sampleButton->setText(QApplication::translate("MainWindow", "Sample", 0, QApplication::UnicodeUTF8));
         lineEdit->setText(QString());
         lineEdit->setPlaceholderText(QString());
         label_2->setText(QApplication::translate("MainWindow", "Triangulation", 0, QApplication::UnicodeUTF8));

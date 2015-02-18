@@ -21,7 +21,10 @@
 #include <pcl/features/normal_3d.h>
 #include <pcl/features/normal_3d_omp.h> //parllel
 
-//triangulation
+//Downsampling
+#include <pcl/filters/voxel_grid.h>
+
+//Triangulation
 #include <pcl/surface/gp3.h> //PCL
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h> //CGAL
 //...
@@ -93,6 +96,7 @@ namespace operation
 	//Triangulations
 	Mesh				PCLtriangulation(PointCloudT::Ptr,PointCloudN::Ptr);
 	void				CGALtriangulation_regular(void);
+	void				downsample(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 	//MIN-Cut
 	void				MaxFlow(PointCloudT::Ptr,PointCloudN::Ptr);
 }

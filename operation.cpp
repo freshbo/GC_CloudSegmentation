@@ -328,6 +328,21 @@ namespace operation
 			}
 		}
 	}
+
+
+	void downsample(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+	{
+		
+		pcl::PointCloud< pcl::PointXYZRGBA>::Ptr input (new( pcl::PointCloud< pcl::PointXYZRGBA>));
+		pcl::copyPointCloud(*input,*cloud); //morgen weiter machen
+		
+		pcl::VoxelGrid<pcl::PointXYZ> sor;
+		sor.setInputCloud(cloud);
+		sor.setLeafSize (0.01f, 0.01f, 0.01f);
+		sor.filter (*cloud);
+
+		return;
+	}
 }//end namespace operation
 
 
