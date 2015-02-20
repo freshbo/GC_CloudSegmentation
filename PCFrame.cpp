@@ -2,9 +2,17 @@
 #include "PCFrame.h"
 
 
-	PCFrame::PCFrame(void){
+	container::PCFrame(void)
+	{
 		singleCloud.reset(new PointCloudT());
 		singleNormal.reset(new PointCloudN());
+		sampleCloud.reset(new PointCloudT());	
+		sampleNormal.reset(new PointCloudN());	
+		singleID.reset(new string("single"));
+		sampleID.reset(new string("sample"));
 	}
-	PCFrame::~PCFrame(void){ }
+	container::~PCFrame(void)
+	{
+
+	}
 

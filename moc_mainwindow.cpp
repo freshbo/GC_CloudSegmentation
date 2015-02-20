@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Wed 18. Feb 17:10:38 2015
+** Created: Fri 20. Feb 11:20:28 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       9,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -34,21 +34,24 @@ static const uint qt_meta_data_MainWindow[] = {
       18,   12,   11,   11, 0x0a,
       43,   11,   11,   11, 0x0a,
       52,   11,   11,   11, 0x0a,
-      62,   11,   11,   11, 0x0a,
-      76,   11,   11,   11, 0x0a,
-      93,   11,   11,   11, 0x0a,
-     113,   11,   11,   11, 0x0a,
-     127,   11,   11,   11, 0x0a,
-     134,   11,   11,   11, 0x0a,
+      64,   11,   11,   11, 0x0a,
+      74,   11,   11,   11, 0x0a,
+      87,   11,   11,   11, 0x0a,
+     104,   11,   11,   11, 0x0a,
+     124,   11,   11,   11, 0x0a,
+     143,   11,   11,   11, 0x0a,
+     162,   11,   11,   11, 0x0a,
+     169,   11,   11,   11, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0value\0pSliderValueChanged(int)\0"
-    "loadPC()\0cleanPC()\0clearClouds()\0"
-    "computeNormals()\0showCurvature(bool)\0"
-    "triangulate()\0test()\0exit()\0"
+    "loadPC()\0loadFrame()\0cleanPC()\0"
+    "downsample()\0computeNormals()\0"
+    "showCurvature(bool)\0showOriginal(bool)\0"
+    "showSampling(bool)\0exit()\0test()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -59,13 +62,15 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         switch (_id) {
         case 0: _t->pSliderValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 1: _t->loadPC(); break;
-        case 2: _t->cleanPC(); break;
-        case 3: _t->clearClouds(); break;
-        case 4: _t->computeNormals(); break;
-        case 5: _t->showCurvature((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 6: _t->triangulate(); break;
-        case 7: _t->test(); break;
-        case 8: _t->exit(); break;
+        case 2: _t->loadFrame(); break;
+        case 3: _t->cleanPC(); break;
+        case 4: _t->downsample(); break;
+        case 5: _t->computeNormals(); break;
+        case 6: _t->showCurvature((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 7: _t->showOriginal((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 8: _t->showSampling((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 9: _t->exit(); break;
+        case 10: _t->test(); break;
         default: ;
         }
     }
@@ -103,9 +108,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 11;
     }
     return _id;
 }

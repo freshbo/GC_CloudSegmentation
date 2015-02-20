@@ -3,10 +3,10 @@
 #include "operation.h"
 #include <vector>
 
-struct PCFrame
+struct container
 {
-	PCFrame(void);
-	~PCFrame(void);
+	container(void);
+	~container(void);
 	
 	std::vector<PointCloudT::Ptr> clouds;
 	std::vector<PointCloudN::Ptr> normals;
@@ -14,7 +14,9 @@ struct PCFrame
 	
 	PointCloudT::Ptr singleCloud;
 	PointCloudN::Ptr singleNormal;
+	PointCloudT::Ptr sampleCloud;
+	PointCloudN::Ptr sampleNormal;
 	boost::shared_ptr<string> singleID;
-
+	boost::shared_ptr<string> sampleID;
 
 };

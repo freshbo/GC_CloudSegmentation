@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -15,6 +15,12 @@
     </ClCompile>
     <ClCompile Include="VisualizerWidget_automoc.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graph.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="maxflow.cpp">
+      <Filter>Graph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +39,12 @@
     <ClInclude Include="ui_mainwindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="block.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="graph.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="CMakeLists.txt" />
@@ -45,5 +57,19 @@
     <Filter Include="Header Files">
       <UniqueIdentifier>{8B87F7D3-22EA-4CDC-9F0D-A7B3EDE31640}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graph">
+      <UniqueIdentifier>{97fe53fa-d755-4fff-a2d2-6cda1b7bfa05}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CHANGES.TXT">
+      <Filter>Graph</Filter>
+    </None>
+    <None Include="instances.inc">
+      <Filter>Graph</Filter>
+    </None>
+    <None Include="README.TXT">
+      <Filter>Graph</Filter>
+    </None>
   </ItemGroup>
 </Project>

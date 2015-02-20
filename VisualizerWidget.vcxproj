@@ -147,7 +147,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>E:\Workspace\01_Repositories\CloudSegmentation\..\..\include;L:\Programme\PCL 1.6.0\3rdParty\VTK\include\vtk-5.8;L:\Libraries\CGAL -4.5.1\auxiliary\gmp\include;E:\Workspace\01_Repositories\CloudSegmentation;L:\Libraries\CGAL -4.5.1\include;L:\Programme\PCL 1.6.0\3rdParty\Boost\include;C:\Qt\4.8.0\include;L:\Programme\PCL 1.6.0\include\pcl-1.6;L:\Programme\PCL 1.6.0\3rdParty\Eigen\include;C:\Program Files\OpenNI\Include;L:\Programme\PCL 1.6.0\3rdParty\FLANN\include;L:\Programme\PCL 1.6.0\3rdParty\Qhull\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Workspace\01_Repositories\CloudSegmentation\..\..\include;L:\Programme\PCL 1.6.0\3rdParty\VTK\include\vtk-5.8;L:\Libraries\CGAL -4.5.1\auxiliary\gmp\include;E:\Workspace\01_Repositories\CloudSegmentation;L:\Libraries\CGAL -4.5.1\include;L:\Programme\PCL 1.6.0\3rdParty\Boost\include;C:\Qt\4.8.0\include;L:\Programme\PCL 1.6.0\include\pcl-1.6;L:\Programme\PCL 1.6.0\3rdParty\Eigen\include;C:\Program Files\OpenNI\Include;L:\Programme\PCL 1.6.0\3rdParty\FLANN\include;L:\Programme\PCL 1.6.0\3rdParty\Qhull\include;E:\Workspace\01_Repositories\CloudSegmentation\MaxFlow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Release/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4503</DisableSpecificWarnings>
@@ -444,13 +444,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="block.h" />
+    <ClInclude Include="graph.h" />
     <ClInclude Include="mainwindow.h" />
     <ClInclude Include="header.h" />
     <ClInclude Include="operation.h" />
     <ClInclude Include="PCFrame.h" />
     <ClInclude Include="ui_mainwindow.h" />
+    <ClCompile Include="graph.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
+    <ClCompile Include="maxflow.cpp" />
     <ClCompile Include="operation.cpp" />
     <ClCompile Include="PCFrame.cpp" />
     <ClCompile Include="VisualizerWidget_automoc.cpp" />
@@ -459,6 +463,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ProjectReference Include="E:/Workspace/01_Repositories/CloudSegmentation/ZERO_CHECK.vcxproj">
       <Project>A6D450AF-6D99-4753-A242-125F78529218</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CHANGES.TXT" />
+    <None Include="instances.inc" />
+    <None Include="README.TXT" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
