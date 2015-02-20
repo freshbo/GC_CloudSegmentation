@@ -16,14 +16,11 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	connect (ui->CurvColorCode,SIGNAL(toggled(bool)),this,SLOT(showCurvature(bool)));
 	connect (ui->ShowOriginal,SIGNAL(toggled(bool)),this,SLOT(showOriginal(bool)));
 	connect (ui->ShowSampling,SIGNAL(toggled(bool)),this,SLOT(showSampling(bool)));
-	connect (ui->sampleButton,SIGNAL(released()),this,SLOT(downsample()));
-//	connect (ui->computeTriangulation,SIGNAL(released()),this,SLOT(triangulate(void)));
-	
+	connect (ui->sampleButton,SIGNAL(released()),this,SLOT(downsample()));	
 	connect (ui->horizontalSlider_p, SIGNAL (valueChanged (int)), this, SLOT (pSliderValueChanged (int)));
-	
-	
 	connect (ui->actionExit,SIGNAL(triggered()),this,SLOT(exit(void)));
 
+	
 	//Set Up VTK window
 	viewer.reset(new pcl::visualization::PCLVisualizer("Viewer",false));
 	ui->qvtkWidget->SetRenderWindow (viewer->getRenderWindow ());
@@ -33,7 +30,9 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	ui->qvtkWidget->update ();
 	
 	//Init Frame
-	Frame.reset(new PCFrame());
+	
+	/*FRAME
+	//Frame.reset(new PCFrame());
 	
 	//init Frame Content
 	Frame->singleCloud = pcl::PointCloud<pcl::PointXYZRGBA>::Ptr(new pcl::PointCloud<pcl::PointXYZRGBA>);
@@ -41,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	viewer->addPointCloud (Frame->singleCloud, *Frame->singleID); //add cloud to viewer with ID.
 	viewer->addPointCloud (Frame->sampleCloud, *Frame->sampleID);
 	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, *Frame->sampleID);
-
+	*/
 }
 MainWindow::~MainWindow()
 {
@@ -63,13 +62,15 @@ void MainWindow::pSliderValueChanged (int value)
 	/*
 	This function lets me controll the Size of the Points
 	It is calles whenever the GUI-Slider is changed.
-	*/
+	
 	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, value, *Frame->singleID);
 	ui->qvtkWidget->update();
+	*/
 }
 
 void MainWindow::loadPC(void)
 {
+	/*
 	//this block reads the file path
 	QString qPath = QFileDialog::getOpenFileName(this,tr("OpenFile"),tr("Files(.ply)"));
 	const std::string path = (qPath.toStdString());
@@ -81,22 +82,24 @@ void MainWindow::loadPC(void)
 	viewer->updatePointCloud(Frame->singleCloud, *Frame->singleID);
 	viewer->resetCamera();
 	ui->qvtkWidget->update (); //update viewer
-
+	*/
 }
 void MainWindow::loadFrame(void)
 {
+	/*
 	QString qPath = QFileDialog::getOpenFileName(this,tr("OpenFile"),tr("Files(.ply)"));
 	//std::string path = (qPath.toStdString());
 	//int found = path.find_last_of('/');
 	//string dir = path.substr(0,found);
 	
-	
+	*/
 	
 }
 
 //Statistical Outlier Removal
 void MainWindow::cleanPC(void)
 {
+	/*
     pcl::PointCloud<pcl::PointXYZ>::Ptr tmpIN(new pcl::PointCloud<pcl::PointXYZ>());
     pcl::copyPointCloud(*Frame->singleCloud,*tmpIN);
 
@@ -113,11 +116,12 @@ void MainWindow::cleanPC(void)
     cout<<Frame->singleCloud->size()<<endl;
 	viewer->updatePointCloud (Frame->singleCloud, *Frame->singleID); //update
     ui->qvtkWidget->update();
+	*/
 }
 
 void MainWindow::downsample()
 // this method creates a downsampled 
-{
+{/*
 	QString textFieldInput = ui->sampleNumberField->text();
 	if(textFieldInput=="")
 	{	
@@ -134,16 +138,18 @@ void MainWindow::downsample()
 	operation::curvatureColorMap(Frame->sampleNormal,Frame->sampleCloud);
 	viewer->updatePointCloud(Frame->sampleCloud,*Frame->sampleID);
 	ui->qvtkWidget->update();
-	
+	*/
 }
 
 //Normal Calculation
 void MainWindow::computeNormals(void)
 {
+	/*
 	std::cout<<"compute Normals"<<std::endl;
 	operation::calcNormals(Frame->singleCloud,Frame->singleNormal);
 	operation::linearizeCurvature(Frame->singleNormal);
 	ui->ColorCode->setEnabled(true);
+	*/
 }
 
 
@@ -152,6 +158,7 @@ void MainWindow::computeNormals(void)
 //visibility Checkboxes
 void MainWindow::showCurvature(bool checked)
 {
+	/*
 	if(checked)
 		//(http://www.vtk.org/doc/nightly/html/classvtkColorLegend.html) VTK legend.
 		operation::curvatureColorMap(Frame->singleNormal,Frame->singleCloud);
@@ -162,9 +169,11 @@ void MainWindow::showCurvature(bool checked)
 	std::cout<<*Frame->singleID<<std::endl;
 	viewer->updatePointCloud (Frame->singleCloud, *Frame->singleID); //update
 	ui->qvtkWidget->update();
+	*/
 }
 void MainWindow::showOriginal(bool checked)
 {
+	/*
 	if(checked)
 		viewer->addPointCloud(Frame->singleCloud,*Frame->singleID);
 	
@@ -172,9 +181,12 @@ void MainWindow::showOriginal(bool checked)
 		viewer->removePointCloud(*Frame->singleID,0);
 
 	ui->qvtkWidget->update();
+	*/
 }
+
 void MainWindow::showSampling(bool checked)
 {
+/*
 	if(checked){
 		viewer->addPointCloud(Frame->sampleCloud,*Frame->sampleID);
 		viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, *Frame->sampleID);
@@ -186,6 +198,7 @@ void MainWindow::showSampling(bool checked)
 		ui->InfoBox->setText("");
 	}
 	ui->qvtkWidget->update();
+*/
 }
 
 
@@ -198,10 +211,11 @@ void MainWindow::exit()
 
 
 void MainWindow::test()
-{
+{/*
 	PointCloudT::Ptr result(new PointCloudT);
 	Segmentation::MinCut(Frame->singleCloud,Frame->singleNormal, result);
 	
 	viewer->addPointCloud(result,"Test");
 	ui->qvtkWidget->update();
+	*/
 }

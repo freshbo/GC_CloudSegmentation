@@ -2,7 +2,7 @@
 #include "PCFrame.h"
 
 
-	container::PCFrame(void)
+	container::container(void)
 	{
 		singleCloud.reset(new PointCloudT());
 		singleNormal.reset(new PointCloudN());
@@ -11,8 +11,13 @@
 		singleID.reset(new string("single"));
 		sampleID.reset(new string("sample"));
 	}
-	container::~PCFrame(void)
+	container::container(PointCloudT cloud ,PointCloudN normals, std::string ID)
 	{
+
+	}
+	container::~container(void)
+	{
+		
 
 	}
 

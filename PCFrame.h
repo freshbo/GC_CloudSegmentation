@@ -2,10 +2,12 @@
 
 #include "operation.h"
 #include <vector>
+#include <string>
 
 struct container
 {
 	container(void);
+	container(PointCloudT cloud ,PointCloudN normals, std::string ID);
 	~container(void);
 	
 	std::vector<PointCloudT::Ptr> clouds;
