@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri 20. Feb 18:14:49 2015
+** Created: Sat 21. Feb 23:08:45 2015
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -79,17 +79,16 @@ public:
     QFrame *line;
     QHBoxLayout *horizontalLayout_3;
     QSlider *horizontalSlider_p;
-    QCheckBox *ShowOriginal;
     QFrame *line_6;
     QVBoxLayout *FrameControllVerticalLayout;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_5;
+    QLabel *InfoBox;
     QLabel *label_7;
-    QLabel *label_6;
-    QScrollBar *horizontalScrollBar;
+    QLabel *PCNumberLABEL;
+    QScrollBar *FrameScrollBar;
     QFrame *line_7;
     QCheckBox *ShowSampling;
-    QLabel *InfoBox;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuEdit;
@@ -352,12 +351,6 @@ public:
 
         horizontalLayout_3->addWidget(horizontalSlider_p);
 
-        ShowOriginal = new QCheckBox(centralWidget);
-        ShowOriginal->setObjectName(QString::fromUtf8("ShowOriginal"));
-        ShowOriginal->setChecked(true);
-
-        horizontalLayout_3->addWidget(ShowOriginal);
-
         line_6 = new QFrame(centralWidget);
         line_6->setObjectName(QString::fromUtf8("line_6"));
         line_6->setFrameShape(QFrame::VLine);
@@ -383,34 +376,50 @@ public:
 
         horizontalLayout_5->addWidget(label_5);
 
+        InfoBox = new QLabel(centralWidget);
+        InfoBox->setObjectName(QString::fromUtf8("InfoBox"));
+        QSizePolicy sizePolicy4(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(InfoBox->sizePolicy().hasHeightForWidth());
+        InfoBox->setSizePolicy(sizePolicy4);
+        InfoBox->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_5->addWidget(InfoBox);
+
         label_7 = new QLabel(centralWidget);
         label_7->setObjectName(QString::fromUtf8("label_7"));
+        QSizePolicy sizePolicy5(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(label_7->sizePolicy().hasHeightForWidth());
+        label_7->setSizePolicy(sizePolicy5);
         label_7->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         horizontalLayout_5->addWidget(label_7);
 
-        label_6 = new QLabel(centralWidget);
-        label_6->setObjectName(QString::fromUtf8("label_6"));
-        sizePolicy3.setHeightForWidth(label_6->sizePolicy().hasHeightForWidth());
-        label_6->setSizePolicy(sizePolicy3);
-        label_6->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        PCNumberLABEL = new QLabel(centralWidget);
+        PCNumberLABEL->setObjectName(QString::fromUtf8("PCNumberLABEL"));
+        sizePolicy3.setHeightForWidth(PCNumberLABEL->sizePolicy().hasHeightForWidth());
+        PCNumberLABEL->setSizePolicy(sizePolicy3);
+        PCNumberLABEL->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        horizontalLayout_5->addWidget(label_6);
+        horizontalLayout_5->addWidget(PCNumberLABEL);
 
 
         FrameControllVerticalLayout->addLayout(horizontalLayout_5);
 
-        horizontalScrollBar = new QScrollBar(centralWidget);
-        horizontalScrollBar->setObjectName(QString::fromUtf8("horizontalScrollBar"));
-        QSizePolicy sizePolicy4(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(horizontalScrollBar->sizePolicy().hasHeightForWidth());
-        horizontalScrollBar->setSizePolicy(sizePolicy4);
-        horizontalScrollBar->setMaximum(10);
-        horizontalScrollBar->setOrientation(Qt::Horizontal);
+        FrameScrollBar = new QScrollBar(centralWidget);
+        FrameScrollBar->setObjectName(QString::fromUtf8("FrameScrollBar"));
+        QSizePolicy sizePolicy6(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+        sizePolicy6.setHorizontalStretch(0);
+        sizePolicy6.setVerticalStretch(0);
+        sizePolicy6.setHeightForWidth(FrameScrollBar->sizePolicy().hasHeightForWidth());
+        FrameScrollBar->setSizePolicy(sizePolicy6);
+        FrameScrollBar->setMaximum(0);
+        FrameScrollBar->setOrientation(Qt::Horizontal);
 
-        FrameControllVerticalLayout->addWidget(horizontalScrollBar);
+        FrameControllVerticalLayout->addWidget(FrameScrollBar);
 
 
         horizontalLayout_3->addLayout(FrameControllVerticalLayout);
@@ -426,13 +435,6 @@ public:
         ShowSampling->setObjectName(QString::fromUtf8("ShowSampling"));
 
         horizontalLayout_3->addWidget(ShowSampling);
-
-        InfoBox = new QLabel(centralWidget);
-        InfoBox->setObjectName(QString::fromUtf8("InfoBox"));
-        sizePolicy1.setHeightForWidth(InfoBox->sizePolicy().hasHeightForWidth());
-        InfoBox->setSizePolicy(sizePolicy1);
-
-        horizontalLayout_3->addWidget(InfoBox);
 
 
         verticalLayout_2->addLayout(horizontalLayout_3);
@@ -487,12 +489,11 @@ public:
         label_2->setText(QApplication::translate("MainWindow", "Triangulation", 0, QApplication::UnicodeUTF8));
         computeTriangulation->setText(QApplication::translate("MainWindow", "Calculate", 0, QApplication::UnicodeUTF8));
         ShowMesh->setText(QApplication::translate("MainWindow", "Show Mesh", 0, QApplication::UnicodeUTF8));
-        ShowOriginal->setText(QApplication::translate("MainWindow", "Show Original", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("MainWindow", "Frame Controll", 0, QApplication::UnicodeUTF8));
-        label_7->setText(QApplication::translate("MainWindow", "PointCloud Nr. : ", 0, QApplication::UnicodeUTF8));
-        label_6->setText(QApplication::translate("MainWindow", "1", 0, QApplication::UnicodeUTF8));
-        ShowSampling->setText(QApplication::translate("MainWindow", "Show Down Sampling", 0, QApplication::UnicodeUTF8));
         InfoBox->setText(QString());
+        label_7->setText(QApplication::translate("MainWindow", "PointCloud Nr. : ", 0, QApplication::UnicodeUTF8));
+        PCNumberLABEL->setText(QApplication::translate("MainWindow", "0", 0, QApplication::UnicodeUTF8));
+        ShowSampling->setText(QApplication::translate("MainWindow", "Show binary Segmentation", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

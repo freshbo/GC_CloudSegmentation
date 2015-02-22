@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Fri 20. Feb 18:22:36 2015
+** Created: Sat 21. Feb 23:58:27 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -32,26 +32,26 @@ static const uint qt_meta_data_MainWindow[] = {
 
  // slots: signature, parameters, type, tag, flags
       18,   12,   11,   11, 0x0a,
-      43,   11,   11,   11, 0x0a,
-      52,   11,   11,   11, 0x0a,
-      64,   11,   11,   11, 0x0a,
-      74,   11,   11,   11, 0x0a,
-      87,   11,   11,   11, 0x0a,
+      35,   12,   11,   11, 0x0a,
+      60,   11,   11,   11, 0x0a,
+      69,   11,   11,   11, 0x0a,
+      81,   11,   11,   11, 0x0a,
+      91,   11,   11,   11, 0x0a,
      104,   11,   11,   11, 0x0a,
-     124,   11,   11,   11, 0x0a,
-     143,   11,   11,   11, 0x0a,
-     162,   11,   11,   11, 0x0a,
-     169,   11,   11,   11, 0x0a,
+     121,   11,   11,   11, 0x0a,
+     141,   11,   11,   11, 0x0a,
+     148,   11,   11,   11, 0x0a,
+     160,   11,   11,   11, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0value\0pSliderValueChanged(int)\0"
-    "loadPC()\0loadFrame()\0cleanPC()\0"
-    "downsample()\0computeNormals()\0"
-    "showCurvature(bool)\0showOriginal(bool)\0"
-    "showSampling(bool)\0exit()\0test()\0"
+    "MainWindow\0\0value\0frameScroll(int)\0"
+    "pSliderValueChanged(int)\0loadPC()\0"
+    "loadFrame()\0cleanPC()\0downsample()\0"
+    "computeNormals()\0showCurvature(bool)\0"
+    "exit()\0showCloud()\0test()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -60,16 +60,16 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         Q_ASSERT(staticMetaObject.cast(_o));
         MainWindow *_t = static_cast<MainWindow *>(_o);
         switch (_id) {
-        case 0: _t->pSliderValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 1: _t->loadPC(); break;
-        case 2: _t->loadFrame(); break;
-        case 3: _t->cleanPC(); break;
-        case 4: _t->downsample(); break;
-        case 5: _t->computeNormals(); break;
-        case 6: _t->showCurvature((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 7: _t->showOriginal((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 8: _t->showSampling((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 9: _t->exit(); break;
+        case 0: _t->frameScroll((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: _t->pSliderValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 2: _t->loadPC(); break;
+        case 3: _t->loadFrame(); break;
+        case 4: _t->cleanPC(); break;
+        case 5: _t->downsample(); break;
+        case 6: _t->computeNormals(); break;
+        case 7: _t->showCurvature((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 8: _t->exit(); break;
+        case 9: _t->showCloud(); break;
         case 10: _t->test(); break;
         default: ;
         }

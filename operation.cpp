@@ -1,25 +1,9 @@
 #include "operation.h"
-
-namespace frameOperation
-{
-	void loadSequence(std::string filePath)
-	{
-		//analyse filename
-		char delimiter = '/';
-		std::string s;
-		std::cout<<filePath<<std::endl;
-		
-		/*
-
-		PointCloudT::Ptr cloud;
-		cloud = operation::loadPLY(filePath);
-	*/
-	}
-}
-
+#include "global.h"
 
 namespace operation
 {
+
 	vector<float> bernsteinDrei(float x)
 	{
 		vector<float> result;
@@ -34,9 +18,8 @@ namespace operation
 		vector<float> bernsteinZwei(float x)
 	{
 		vector<float> result;
+		
 
-		result.push_back(1-x);
-		result.push_back(x);
 		result.push_back(0);
 
 		return result;
@@ -100,8 +83,8 @@ namespace operation
 		ne.setSearchMethod (tree);
 
 		// Use all neighbors in a sphere of radius 3cm
-		//ne.setRadiusSearch (10);
-		ne.setKSearch(500);
+		ne.setRadiusSearch (1);
+		//ne.setKSearch(300);
 		
 		// Compute the features
 		ne.compute (*normals);
@@ -113,25 +96,12 @@ namespace operation
 	void linearizeCurvature(PointCloudN::Ptr normals)
 	{
 	
-		float c_p = 0.005;
-		float curve_i;
-		float mini=1;
-		float maxi=0;
 		
-		for(size_t i =0; i < normals->points.size(); i++)
-		{
-			//linearize Curvature values.
-			curve_i =(-1)* log(max(normals->points.at(i).curvature,c_p));	
-			if(curve_i<mini)
-				mini=curve_i;
-
-			if(curve_i>maxi)
-				maxi=curve_i;
-		}
 
 		for (size_t i = 0; i<normals->points.size(); i++)
 		{		
-			normals->points[i].curvature =abs(log(max(normals->points.at(i).curvature,c_p))/maxi);
+			normals->points[i].curvature =log(max(normals->points.at(i).curvature,_ct));
+
 		}
 
 		return;
@@ -158,30 +128,53 @@ namespace operation
 
 	void curvatureColorMap(PointCloudN::Ptr normals, PointCloudT::Ptr wolke)
 	{
+		
 		float curve_i;
+
 		//Coloring Points according to estimated curvature using bernsteinpolynomials
-		vector<float> bernstein;
 		for (size_t i = 0; i<wolke->points.size(); i++)
 		{					
-			curve_i =normals->points[i].curvature;
-			bernstein = bernsteinZwei(curve_i);
+		
+			curve_i =(normals->points[i].curvature- _ct)/C_max;
 			
-			wolke->points[i].r= bernstein[0]*255;
-			wolke->points[i].g= bernstein[1]*255;
-			wolke->points[i].b= bernstein[2]*255;
+			
+			wolke->points[i].r= curve_i*255;
+			wolke->points[i].g= (1-curve_i)*255;
+			wolke->points[i].b= 128;
 		}
-
+		
 		return;
 	}
 
-	void downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr input,pcl::PointCloud<pcl::PointXYZRGBA>::Ptr output,float sampleSize)
+	void colorizeCluster(PointCloudT::Ptr cloud, vector<int> cluster)
+	{
+		if (cluster.size()!= cloud->size())
+			return;
+		float g = 12;
+		int e = 0;
+		for( int i= 0; i< cloud->size();i++)
+		{
+			e = cluster.at(i)*3;
+			cloud->points[i].r =  (int) pow(g,e)%251;
+			cloud->points[i].g =  (int) pow(g,e)%251;
+			cloud->points[i].b =  (int) pow(g,e)%251;
+		}
+
+	}
+
+	void downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud, float sampleSize)
 	{
 		
+		PointCloudT::Ptr tmp;
+		tmp.reset(new PointCloudT);
+		
+		
 		pcl::VoxelGrid<pcl::PointXYZRGBA> sor;
-		sor.setInputCloud(input);
+		sor.setInputCloud(cloud);
 		sor.setLeafSize (sampleSize, sampleSize, sampleSize);
-		sor.filter (*output);
-
+		sor.filter (*tmp);
+		pcl::copyPointCloud(*tmp,*cloud);
+				
 		return;
 	}
 
@@ -224,21 +217,19 @@ namespace operation
 
 namespace Segmentation
 {
-	PointCloudT MinCut(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr result)
+	vector<int> MinCut(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr Leafs ,PointCloudT::Ptr Stems)
 	{
 
-		GraphType *g = new GraphType(/*estimated # of nodes*/ 2, /*estimated # of edges*/ 1); 
-
-		
-
-		
+		int K = 10;
+		GraphType *g = new GraphType(/*estimated # of nodes*/cloud->size() , /*estimated # of edges*/ K*cloud->size()); 
+		int count =0;
 		for(int i=0;i<cloud->size();i++)
 		{
 			g->  add_node();
-			g -> add_tweights( i,   /* capacities */  normals->points[i].curvature, 1-normals->points[i].curvature );
+			g -> add_tweights( i,   /* capacities */  _RS - log(normals->points[i].curvature), log( normals->points[i].curvature)-_RL);
 		}
-	
-		int K = 10;
+		
+		
 		//Set up Search method:
 		pcl::KdTreeFLANN<pcl::PointXYZRGBA> kdtree; 
 		kdtree.setInputCloud (cloud);
@@ -248,42 +239,47 @@ namespace Segmentation
 		vector<float> pointNKNsquaredDistance;
 		
 
-		//Walk through each point of the downsampled cloud
 		for (int i=0; i<cloud->size();i++)
 		{			
 			//Search KNN for point i
 			kdtree.nearestKSearch(cloud->points[i],K,pointIdxNKNSearch,pointNKNsquaredDistance);
 			
 			//Walk through NKN and sum up the curvature
-			for(int j =0; j<pointIdxNKNSearch.size (); j++)
-			{
-				g->add_edge(i,pointIdxNKNSearch[j],abs(1-(normals->points[i].curvature - normals->points[pointIdxNKNSearch[j]].curvature)),abs(1-( normals->points[i].curvature - normals->points[pointIdxNKNSearch[j]].curvature)));
+			for(int k =0; k<pointIdxNKNSearch.size (); k++)
+			{	
+				int j = pointIdxNKNSearch[k];
+				g->add_edge(i,j,max(1/(normals->points.at(i).curvature),1/(normals->points.at(j).curvature)),0);
 				
 			}
 
 		}
 		
-
-
-		double flow = g -> maxflow();
+		float flow = g -> maxflow();
+		int leafPointCount =0;
+		int stemPointCount =0;
+		vector<int> binCluster;
 		
 		for(int i=0; i< cloud->size();i++){
-			result->push_back(cloud->points[i]);
 			if(g->what_segment(i) == GraphType::SOURCE){
-				result->points[i].r = 0;
-				result->points[i].g = 0;
-				result->points[i].b = 160;
+				Leafs->push_back(cloud->points[i]);
+				Leafs->points[leafPointCount].r = 0;
+				Leafs->points[leafPointCount].g = 0;
+				Leafs->points[leafPointCount].b = 160;
+				binCluster.push_back(1);
+				leafPointCount++;
 			}
 			else{
-				result->points[i].r = 120;
-				result->points[i].g = 120;
-				result->points[i].b = 0;
+				Stems->push_back(cloud->points[i]);
+				Stems->points[stemPointCount].r = 120;
+				Stems->points[stemPointCount].g = 120;
+				Stems->points[stemPointCount].b = 0;
+				binCluster.push_back(2);
+				stemPointCount++;
 			}
 		}
 
 		delete g;
-
-		return *result;
+		return binCluster;
 	}
 		
 }

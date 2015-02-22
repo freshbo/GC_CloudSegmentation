@@ -2,22 +2,32 @@
 #include "PCFrame.h"
 
 
-	container::container(void)
-	{
-		singleCloud.reset(new PointCloudT());
-		singleNormal.reset(new PointCloudN());
-		sampleCloud.reset(new PointCloudT());	
-		sampleNormal.reset(new PointCloudN());	
-		singleID.reset(new string("single"));
-		sampleID.reset(new string("sample"));
-	}
-	container::container(PointCloudT cloud ,PointCloudN normals, std::string ID)
-	{
-
-	}
-	container::~container(void)
+	hypothesis::hypothesis(void)
 	{
 		
+		
+		ID = "";									//name in viewer
+		cloud.reset(new PointCloudT());				//PointCloud to work with
+		normal.reset(new PointCloudN());			//Normals
+		
+		L.reset(new PointCloudT());					//Leaf Points
+		S.reset(new PointCloudT());					//Stem Points
 
+		phi  =	0;									//phi Function |L| x |S|  Gives the number of Organs (leafs x stems)
+		
+		
+		
+		//GUI booleans.. curvature, or segmentation already computed? 
+		curv	=	false;
+		binSeg	=	false;
+		down	=	false;
+		
+		
 	}
+
+	hypothesis::hypothesis(PointCloudT cloud ,PointCloudN normals, std::string ID)
+	{}
+
+	hypothesis::~hypothesis(void)
+	{}
 

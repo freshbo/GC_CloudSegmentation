@@ -1,12 +1,31 @@
 #include "mainwindow.h"
 #include <QtGui/QApplication>
-#include "header.h"
 #include <iostream>
+
+#include <vector>
+
+
+
+
+inline bool fileExists (const std::string &name)
+{
+
+	ifstream f(name.c_str());
+	if (f.good()) {
+		f.close();
+		return true;
+	} else {
+		f.close();
+		return false;
+	}   
+};
 
 
 
 int main(int argc, char *argv[])
 {
+	
+
 /*	std::cout<<"# arguments: " << argc<<std::endl
 			 << "argument #1: " << argv[0]<< std::endl;*/
 	if(argc==2){

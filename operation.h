@@ -23,6 +23,9 @@
 #include <pcl/features/normal_3d.h>
 #include <pcl/features/normal_3d_omp.h> //parllel
 
+//visualization
+#include <pcl/visualization/pcl_visualizer.h>
+
 //Downsampling
 #include <pcl/filters/voxel_grid.h>
 
@@ -43,11 +46,6 @@ typedef pcl::PolygonMesh					Mesh;
 typedef Graph<float,float,float> GraphType;
 
 
-namespace frameOperation
-{
-	void				loadSequence(std::string filePath);
-	void				eraseSequence(void);
-}
 
 namespace operation
 {
@@ -59,13 +57,19 @@ namespace operation
 	void				linearizeCurvature(PointCloudN::Ptr);
 	void				colorizeDefault(PointCloudT::Ptr);
 	void				curvatureColorMap(PointCloudN::Ptr curve, PointCloudT::Ptr cloud);
-	
-	void				downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr simpleCloud,pcl::PointCloud<pcl::PointXYZRGBA>::Ptr sampleCloud,float);
+	void				colorizeCluster(PointCloudT::Ptr cloud, vector<int> cluster);
+
+	void				downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr simpleCloud,float);
 	void				calcDownsampledeCurvature(PointCloudT::Ptr cloud,PointCloudN::Ptr normals,PointCloudT::Ptr sampledCloud,PointCloudN::Ptr sampledNormals);
+	
+	
+	
+
 
 }
 
 namespace Segmentation
 {
-	PointCloudT			MinCut(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr result);
+	vector<int>			MinCut(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr L,PointCloudT::Ptr S);
 }
+

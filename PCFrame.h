@@ -4,21 +4,32 @@
 #include <vector>
 #include <string>
 
-struct container
+struct hypothesis
 {
-	container(void);
-	container(PointCloudT cloud ,PointCloudN normals, std::string ID);
-	~container(void);
+	hypothesis(void);
+	hypothesis(PointCloudT cloud ,PointCloudN normals, std::string ID);
+	~hypothesis(void);
 	
-	std::vector<PointCloudT::Ptr> clouds;
-	std::vector<PointCloudN::Ptr> normals;
-	std::vector<string> ID;
+
+	string ID;					//name of the Cloud in Viewer
+	PointCloudT::Ptr cloud;		//stores all points of the PointCloud
+	PointCloudN::Ptr normal;	//stores the corresponding normals and curvature to cloud
+	vector<int> binCluster;		//represents as Integer the Cluster each Point of cloud belongs to
 	
-	PointCloudT::Ptr singleCloud;
-	PointCloudN::Ptr singleNormal;
-	PointCloudT::Ptr sampleCloud;
-	PointCloudN::Ptr sampleNormal;
-	boost::shared_ptr<string> singleID;
-	boost::shared_ptr<string> sampleID;
+	PointCloudT::Ptr L;			//binary segmented cloud: All leaf points
+	vector<int>LCluster;		//represents as integer the Leaf each Point in L belongs to
+	PointCloudT::Ptr S;			//binary segmented cloud: All Stem Points
+	vector<int>SCluster;		//represents as integer the Leaf each Point in L belongs to
+
+	
+	
+	
+	int phi;
+
+	bool curv;
+	bool binSeg;
+	bool down;
+
 
 };
+

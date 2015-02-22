@@ -445,12 +445,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="block.h" />
+    <ClInclude Include="global.h" />
     <ClInclude Include="graph.h" />
     <ClInclude Include="mainwindow.h" />
-    <ClInclude Include="header.h" />
     <ClInclude Include="operation.h" />
     <ClInclude Include="PCFrame.h" />
     <ClInclude Include="ui_mainwindow.h" />
+    <ClCompile Include="global.cpp" />
     <ClCompile Include="graph.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />

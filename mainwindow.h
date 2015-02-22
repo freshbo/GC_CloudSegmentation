@@ -13,7 +13,8 @@
 
 //Visualization Tool Kit
 #include <vtkRenderWindow.h>
-#include <pcl/visualization/pcl_visualizer.h>
+
+
 
 
 namespace Ui 
@@ -30,6 +31,7 @@ class MainWindow : public QMainWindow
 		~MainWindow();
 
 	public slots:
+		void frameScroll(int value);
 		void pSliderValueChanged (int value);
 		void loadPC(void);
 		void loadFrame(void);
@@ -38,17 +40,17 @@ class MainWindow : public QMainWindow
 		void downsample(void);
 		void computeNormals(void);
 		void showCurvature(bool);
-		void showOriginal(bool);
-		void showSampling(bool);
 		void exit(void);
-
+		void showCloud(void);
 		void test(void);
 	
 
 	protected:
 		boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
-		vector<boost::shared_ptr<container>> Frame;
+		int t ;
+		vector<boost::shared_ptr<hypothesis>> Frame;
 
 	private:
 		Ui::MainWindow	*ui;
 };
+
