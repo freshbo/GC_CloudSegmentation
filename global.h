@@ -7,3 +7,4 @@
 	extern float C_min ;
 	extern float _RL  ;
 	extern float _RS  ;
+	extern int	 g_renderSeq;

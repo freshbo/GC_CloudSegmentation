@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat 21. Feb 23:08:45 2015
+** Created: Sun 22. Feb 22:52:17 2015
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -25,6 +25,7 @@
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 #include <QtGui/QPushButton>
+#include <QtGui/QRadioButton>
 #include <QtGui/QScrollBar>
 #include <QtGui/QSlider>
 #include <QtGui/QSpacerItem>
@@ -55,12 +56,12 @@ public:
     QVBoxLayout *Curvature_LAYOUT;
     QLabel *CurvatureLAYOUT;
     QPushButton *computeCurvature;
-    QCheckBox *CurvColorCode;
+    QRadioButton *CurvColorCode;
     QFrame *line_3;
     QVBoxLayout *BinarySeg_LAYOUT;
     QLabel *BinarySeg_LABEL;
     QPushButton *SegmentButton;
-    QCheckBox *SegColorCode;
+    QRadioButton *SegColorCode;
     QSpacerItem *horizontalSpacer;
     QVBoxLayout *Sampling_LAYOUT;
     QLabel *Sampling_LABEL;
@@ -82,13 +83,14 @@ public:
     QFrame *line_6;
     QVBoxLayout *FrameControllVerticalLayout;
     QHBoxLayout *horizontalLayout_5;
-    QLabel *label_5;
+    QLabel *label;
+    QLabel *CloudSizeLABEL;
     QLabel *InfoBox;
     QLabel *label_7;
     QLabel *PCNumberLABEL;
     QScrollBar *FrameScrollBar;
     QFrame *line_7;
-    QCheckBox *ShowSampling;
+    QRadioButton *ShowOriginal;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuEdit;
@@ -200,7 +202,7 @@ public:
 
         Curvature_LAYOUT->addWidget(computeCurvature);
 
-        CurvColorCode = new QCheckBox(centralWidget);
+        CurvColorCode = new QRadioButton(centralWidget);
         CurvColorCode->setObjectName(QString::fromUtf8("CurvColorCode"));
 
         Curvature_LAYOUT->addWidget(CurvColorCode);
@@ -230,7 +232,7 @@ public:
 
         BinarySeg_LAYOUT->addWidget(SegmentButton);
 
-        SegColorCode = new QCheckBox(centralWidget);
+        SegColorCode = new QRadioButton(centralWidget);
         SegColorCode->setObjectName(QString::fromUtf8("SegColorCode"));
 
         BinarySeg_LAYOUT->addWidget(SegColorCode);
@@ -364,17 +366,22 @@ public:
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setSpacing(6);
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
-        label_5 = new QLabel(centralWidget);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label = new QLabel(centralWidget);
+        label->setObjectName(QString::fromUtf8("label"));
+
+        horizontalLayout_5->addWidget(label);
+
+        CloudSizeLABEL = new QLabel(centralWidget);
+        CloudSizeLABEL->setObjectName(QString::fromUtf8("CloudSizeLABEL"));
         QSizePolicy sizePolicy3(QSizePolicy::Fixed, QSizePolicy::Preferred);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(label_5->sizePolicy().hasHeightForWidth());
-        label_5->setSizePolicy(sizePolicy3);
-        label_5->setLayoutDirection(Qt::LeftToRight);
-        label_5->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        sizePolicy3.setHeightForWidth(CloudSizeLABEL->sizePolicy().hasHeightForWidth());
+        CloudSizeLABEL->setSizePolicy(sizePolicy3);
+        CloudSizeLABEL->setLayoutDirection(Qt::LeftToRight);
+        CloudSizeLABEL->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
-        horizontalLayout_5->addWidget(label_5);
+        horizontalLayout_5->addWidget(CloudSizeLABEL);
 
         InfoBox = new QLabel(centralWidget);
         InfoBox->setObjectName(QString::fromUtf8("InfoBox"));
@@ -431,10 +438,10 @@ public:
 
         horizontalLayout_3->addWidget(line_7);
 
-        ShowSampling = new QCheckBox(centralWidget);
-        ShowSampling->setObjectName(QString::fromUtf8("ShowSampling"));
+        ShowOriginal = new QRadioButton(centralWidget);
+        ShowOriginal->setObjectName(QString::fromUtf8("ShowOriginal"));
 
-        horizontalLayout_3->addWidget(ShowSampling);
+        horizontalLayout_3->addWidget(ShowOriginal);
 
 
         verticalLayout_2->addLayout(horizontalLayout_3);
@@ -477,10 +484,10 @@ public:
         cleanThresh->setPlaceholderText(QApplication::translate("MainWindow", "threshold", 0, QApplication::UnicodeUTF8));
         CurvatureLAYOUT->setText(QApplication::translate("MainWindow", "Curvature", 0, QApplication::UnicodeUTF8));
         computeCurvature->setText(QApplication::translate("MainWindow", "Calculate", 0, QApplication::UnicodeUTF8));
-        CurvColorCode->setText(QApplication::translate("MainWindow", "Color Code", 0, QApplication::UnicodeUTF8));
+        CurvColorCode->setText(QApplication::translate("MainWindow", "ShowColor", 0, QApplication::UnicodeUTF8));
         BinarySeg_LABEL->setText(QApplication::translate("MainWindow", "Leaf- Stem", 0, QApplication::UnicodeUTF8));
         SegmentButton->setText(QApplication::translate("MainWindow", "Segmentation", 0, QApplication::UnicodeUTF8));
-        SegColorCode->setText(QApplication::translate("MainWindow", "ColorCode", 0, QApplication::UnicodeUTF8));
+        SegColorCode->setText(QApplication::translate("MainWindow", "ShowColor", 0, QApplication::UnicodeUTF8));
         Sampling_LABEL->setText(QApplication::translate("MainWindow", "DownSampling", 0, QApplication::UnicodeUTF8));
         sampleButton->setText(QApplication::translate("MainWindow", "Sample", 0, QApplication::UnicodeUTF8));
         sampleNumberField->setText(QString());
@@ -489,11 +496,12 @@ public:
         label_2->setText(QApplication::translate("MainWindow", "Triangulation", 0, QApplication::UnicodeUTF8));
         computeTriangulation->setText(QApplication::translate("MainWindow", "Calculate", 0, QApplication::UnicodeUTF8));
         ShowMesh->setText(QApplication::translate("MainWindow", "Show Mesh", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("MainWindow", "Frame Controll", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("MainWindow", "Points: ", 0, QApplication::UnicodeUTF8));
+        CloudSizeLABEL->setText(QApplication::translate("MainWindow", "0", 0, QApplication::UnicodeUTF8));
         InfoBox->setText(QString());
         label_7->setText(QApplication::translate("MainWindow", "PointCloud Nr. : ", 0, QApplication::UnicodeUTF8));
         PCNumberLABEL->setText(QApplication::translate("MainWindow", "0", 0, QApplication::UnicodeUTF8));
-        ShowSampling->setText(QApplication::translate("MainWindow", "Show binary Segmentation", 0, QApplication::UnicodeUTF8));
+        ShowOriginal->setText(QApplication::translate("MainWindow", "RadioButton", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

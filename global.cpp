@@ -6,3 +6,4 @@
 	float C_min = _ct;
 	float _RL = log(_ct);
 	float _RS = log(0.33333333);
+	int	 g_renderSeq = 0;

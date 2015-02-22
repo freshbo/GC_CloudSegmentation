@@ -36,13 +36,15 @@ class MainWindow : public QMainWindow
 		void loadPC(void);
 		void loadFrame(void);
 
-		void cleanPC(void);
+		void statisticalOutliers(void);
+		void radiusOutliers(void);
 		void downsample(void);
-		void computeNormals(void);
+		void computeCurvature(void);
 		void showCurvature(bool);
+		void showbinSegmentation(bool);
 		void exit(void);
 		void showCloud(void);
-		void test(void);
+		void BinSeg(void);
 	
 
 	protected:

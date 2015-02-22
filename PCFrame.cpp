@@ -1,6 +1,6 @@
 #pragma once
 #include "PCFrame.h"
-
+#include "global.h"
 
 	hypothesis::hypothesis(void)
 	{
@@ -15,7 +15,7 @@
 
 		phi  =	0;									//phi Function |L| x |S|  Gives the number of Organs (leafs x stems)
 		
-		
+		renderSeq = g_renderSeq;
 		
 		//GUI booleans.. curvature, or segmentation already computed? 
 		curv	=	false;

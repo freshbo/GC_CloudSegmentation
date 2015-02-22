@@ -49,22 +49,16 @@ typedef Graph<float,float,float> GraphType;
 
 namespace operation
 {
-	vector<float>		bernsteinDrei(float);
-	vector<float>		bernsteinZwei(float);
+
 	string 				loadPLY(std::string path,PointCloudT::Ptr);
-    void                outlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,int,float);
-	void				calcNormals(PointCloudT::Ptr cloud,PointCloudN::Ptr);
+    void                statisticalOutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,int,float);
+	void                radiusOutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,float);
+	void				calcCurvature(PointCloudT::Ptr cloud,PointCloudN::Ptr);
 	void				linearizeCurvature(PointCloudN::Ptr);
 	void				colorizeDefault(PointCloudT::Ptr);
-	void				curvatureColorMap(PointCloudN::Ptr curve, PointCloudT::Ptr cloud);
-	void				colorizeCluster(PointCloudT::Ptr cloud, vector<int> cluster);
-
+	void				colorizeCurvature(PointCloudN::Ptr curve, PointCloudT::Ptr cloud);
+	void				colorizeBinCluster(PointCloudT::Ptr cloud, vector<int> cluster);
 	void				downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr simpleCloud,float);
-	void				calcDownsampledeCurvature(PointCloudT::Ptr cloud,PointCloudN::Ptr normals,PointCloudT::Ptr sampledCloud,PointCloudN::Ptr sampledNormals);
-	
-	
-	
-
 
 }
 

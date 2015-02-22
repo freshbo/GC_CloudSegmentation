@@ -31,5 +31,8 @@ struct hypothesis
 	bool down;
 
 
+	//viewer Update:
+	int renderSeq;
+
 };
 

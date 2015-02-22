@@ -11,11 +11,12 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	//Connect SIGNALS and SLOTS
 	connect (ui->actionLoad,SIGNAL(triggered()),this,SLOT(loadFrame()));
     connect (ui->loadButton,SIGNAL(released()),this,SLOT(loadPC()));
-    connect (ui->cleanButton,SIGNAL(released()),this,SLOT(cleanPC()));
-	connect (ui->SegmentButton,SIGNAL(released()),this,SLOT(test(void)));
+    connect (ui->cleanButton,SIGNAL(released()),this,SLOT(statisticalOutliers()));
+	connect (ui->SegmentButton,SIGNAL(released()),this,SLOT(BinSeg(void)));
 	connect (ui->FrameScrollBar, SIGNAL(valueChanged(int)), this, SLOT(frameScroll(int)));
-	connect (ui->computeCurvature,SIGNAL(released()),this,SLOT(computeNormals()));
+	connect (ui->computeCurvature,SIGNAL(released()),this,SLOT(computeCurvature()));
 	connect (ui->CurvColorCode,SIGNAL(toggled(bool)),this,SLOT(showCurvature(bool)));
+	connect (ui->SegColorCode,SIGNAL(toggled(bool)),this,SLOT(showbinSegmentation(bool)));
 	connect (ui->sampleButton,SIGNAL(released()),this,SLOT(downsample()));	
 	connect (ui->horizontalSlider_p, SIGNAL (valueChanged (int)), this, SLOT (pSliderValueChanged (int)));
 	connect (ui->actionExit,SIGNAL(triggered()),this,SLOT(exit(void)));
@@ -47,59 +48,15 @@ showCurvature
 exit()
 
 */
-
-void MainWindow::frameScroll(int value)
-{
-	t = value;
-
-	showCloud();
-	ui->PCNumberLABEL->setText(QString::number(t));
-	
-	//set viewer to correct cloud
-
-
-
-}
-
-void MainWindow::showCloud(void)
-{
-	
-	viewer->removeAllPointClouds();
-
-	if(ui->CurvColorCode->isChecked()&& Frame.at(t)->curv)
-		operation::curvatureColorMap(Frame.at(t)->normal,Frame.at(t)->cloud);
-	else if(ui->SegColorCode->isChecked() && Frame.at(t)->binSeg)
-		operation::colorizeCluster(Frame.at(t)->cloud,Frame.at(t)->binCluster);
-	else
-		operation::colorizeDefault(Frame.at(t)->cloud);
-	
-	
-	viewer->addPointCloud(Frame.at(t)->cloud,Frame.at(t)->ID);
-	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, ui->horizontalSlider_p->value(), Frame.at(t)->ID);
-	ui->qvtkWidget->update();
-	
-}
-
-void MainWindow::pSliderValueChanged (int value)
-{
-	/*
-	This function lets me controll the Size of the Points
-	It is calles whenever the GUI-Slider is changed.
-	*/
-	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, value, Frame.at(t)->ID);
-	ui->qvtkWidget->update();
-	
-}
-
 void MainWindow::loadPC(void)
 {
-	
-
 	boost::shared_ptr<hypothesis> H_t (new hypothesis);
 	
 	//read the file path
 	QString qPath = QFileDialog::getOpenFileName(this,tr("OpenFile"),tr("Files(.ply)"));
 	const std::string path = (qPath.toStdString());
+	if (path=="")
+		return;
 	//determine File name
 	int slash = path.find_last_of('/');
 	int dot   = path.find_last_of(".");
@@ -132,6 +89,7 @@ void MainWindow::loadPC(void)
 	t = Frame.size()-1;
 
 }
+
 void MainWindow::loadFrame(void)
 {
 	/*
@@ -143,37 +101,86 @@ void MainWindow::loadFrame(void)
 	
 }
 
+void MainWindow::frameScroll(int value)
+{
+	t = value;
+	showCloud();
+}
+
+void MainWindow::showCloud(void)
+{
+	if (Frame.at(t)->renderSeq!=g_renderSeq){
+		Frame.at(t)->renderSeq = g_renderSeq;
+
+		if(ui->CurvColorCode->isChecked()&& Frame.at(t)->curv)
+			operation::colorizeCurvature(Frame.at(t)->normal,Frame.at(t)->cloud);
+		else if(ui->SegColorCode->isChecked() && Frame.at(t)->binSeg)
+			operation::colorizeBinCluster(Frame.at(t)->cloud,Frame.at(t)->binCluster);
+		else
+			operation::colorizeDefault(Frame.at(t)->cloud);
+	}
+
+	
+	viewer->removeAllPointClouds();
+	viewer->addPointCloud(Frame.at(t)->cloud,Frame.at(t)->ID);
+	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, ui->horizontalSlider_p->value(), Frame.at(t)->ID);
+	
+	ui->PCNumberLABEL->setText(QString::number(t));
+	ui->InfoBox->setText(QString::fromStdString(Frame.at(t)->ID));
+	ui->CloudSizeLABEL->setText(QString::number(Frame.at(t)->cloud->size()));	
+
+	ui->qvtkWidget->update();
+}
+
+
+
 //Normal Calculation
-void MainWindow::computeNormals(void)
+void MainWindow::computeCurvature(void)
 {
 	
 	std::cout<<"compute Normals"<<std::endl;
-	operation::calcNormals(Frame.at(t)->cloud,Frame.at(t)->normal);
+	operation::calcCurvature(Frame.at(t)->cloud,Frame.at(t)->normal);
+	//render Properties
 	Frame.at(t)->curv = true;
+	Frame.at(t)->renderSeq=-1;
+	showCloud();
 }
 
 //Statistical Outlier Removal
-void MainWindow::cleanPC(void)
+void MainWindow::statisticalOutliers(void)
 {
-	
-	/*
     pcl::PointCloud<pcl::PointXYZ>::Ptr tmpIN(new pcl::PointCloud<pcl::PointXYZ>());
-    pcl::copyPointCloud(*Frame->singleCloud,*tmpIN);
+    pcl::copyPointCloud(*Frame.at(t)->cloud,*tmpIN);
 
 	int meanK = ui->cleanMeanK->text().toFloat();
 	int thresh = ui->cleanThresh->text().toFloat();
 
     cout<<tmpIN->size()<<endl;
-	operation::outlierRemoval(tmpIN,meanK,thresh);
+	operation::statisticalOutlierRemoval(tmpIN,meanK,thresh);
     cout<<tmpIN->size()<<endl;
 
-    Frame->singleCloud->clear();
-    pcl::copyPointCloud(*tmpIN,*Frame->singleCloud);
-    operation::colorizeDefault(Frame->singleCloud);
-    cout<<Frame->singleCloud->size()<<endl;
-	viewer->updatePointCloud (Frame->singleCloud, *Frame->singleID); //update
-    ui->qvtkWidget->update();
-	*/
+	Frame.at(t)->cloud->clear();
+    pcl::copyPointCloud(*tmpIN,*Frame.at(t)->cloud);
+    showCloud();
+	
+}
+void MainWindow::radiusOutliers(void)
+{
+	pcl::PointCloud<pcl::PointXYZ>::Ptr tmpIN(new pcl::PointCloud<pcl::PointXYZ>());
+    pcl::copyPointCloud(*Frame.at(t)->cloud,*tmpIN);
+	
+	float radius = -1;
+	radius = ui->cleanMeanK->text().toFloat();
+	if (radius<0)
+		cout<<"pleaseEnter a positive Radius"<<endl;
+
+    cout<<tmpIN->size()<<endl;
+	operation::radiusOutlierRemoval(tmpIN,radius);
+    cout<<tmpIN->size()<<endl;
+
+	Frame.at(t)->cloud->clear();
+    pcl::copyPointCloud(*tmpIN,*Frame.at(t)->cloud);
+    showCloud();
 }
 
 void MainWindow::downsample()
@@ -204,26 +211,26 @@ void MainWindow::downsample()
 
 //visibility Checkboxes
 void MainWindow::showCurvature(bool checked)
+{	
+	g_renderSeq++;
+	showCloud();
+}
+void MainWindow::showbinSegmentation(bool)
 {
-	
-	if(checked)
-		//(http://www.vtk.org/doc/nightly/html/classvtkColorLegend.html) VTK legend.
-		operation::curvatureColorMap(Frame.at(t)->normal,Frame.at(t)->cloud);
-	
-	else if(!checked)
-		operation::colorizeDefault(Frame.at(t)->cloud);
-		
-	
-	viewer->updatePointCloud (Frame.at(t)->cloud, Frame.at(t)->ID); //update
+	g_renderSeq++;
+	showCloud();
+}
+//Point Size
+void MainWindow::pSliderValueChanged (int value)
+{
+	/*
+	This function lets me controll the Size of the Points
+	It is calles whenever the GUI-Slider is changed.
+	*/
+	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, value, Frame.at(t)->ID);
 	ui->qvtkWidget->update();
 	
 }
-
-
-
-
-
-
 
 void MainWindow::exit()
 {
@@ -231,13 +238,13 @@ void MainWindow::exit()
 }
 
 
-void MainWindow::test()
+void MainWindow::BinSeg()
 {
-	
+	if(!Frame.at(t)->curv)
+		computeCurvature();
 	Frame.at(t)->binCluster = Segmentation::MinCut(Frame.at(t)->cloud,Frame.at(t)->normal, Frame.at(t)->L,Frame.at(t)->S);
-	
-	viewer->removeAllPointClouds();
-	viewer->addPointCloud(Frame.at(t)->L,Frame.at(t)->ID);
-	ui->qvtkWidget->update();
+	//render Properties
 	Frame.at(t)->binSeg=true;
+	Frame.at(t)->renderSeq=-1;
+	showCloud();
 }
