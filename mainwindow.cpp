@@ -120,7 +120,6 @@ void MainWindow::showCloud(void)
 			operation::colorizeDefault(Frame.at(t)->cloud);
 	}
 
-	
 	viewer->removeAllPointClouds();
 	viewer->addPointCloud(Frame.at(t)->cloud,Frame.at(t)->ID);
 	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, ui->horizontalSlider_p->value(), Frame.at(t)->ID);
@@ -137,7 +136,6 @@ void MainWindow::showCloud(void)
 //Normal Calculation
 void MainWindow::computeCurvature(void)
 {
-	
 	std::cout<<"compute Normals"<<std::endl;
 	operation::calcCurvature(Frame.at(t)->cloud,Frame.at(t)->normal);
 	//render Properties

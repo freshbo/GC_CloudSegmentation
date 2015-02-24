@@ -23,6 +23,9 @@
 #include <pcl/features/normal_3d.h>
 #include <pcl/features/normal_3d_omp.h> //parllel
 
+//Triangulation
+#include <pcl/surface/gp3.h>
+
 //visualization
 #include <pcl/visualization/pcl_visualizer.h>
 
@@ -60,6 +63,7 @@ namespace operation
 	void				colorizeBinCluster(PointCloudT::Ptr cloud, vector<int> cluster);
 	void				downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr simpleCloud,float);
 
+	Mesh				PCLtriangulation(PointCloudT::Ptr,PointCloudN::Ptr);
 }
 
 namespace Segmentation

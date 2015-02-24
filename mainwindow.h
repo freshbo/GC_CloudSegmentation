@@ -45,7 +45,7 @@ class MainWindow : public QMainWindow
 		void exit(void);
 		void showCloud(void);
 		void BinSeg(void);
-	
+		
 
 	protected:
 		boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;

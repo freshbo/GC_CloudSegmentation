@@ -5,6 +5,7 @@ find_package (Qt4 REQUIRED)
 find_package (VTK REQUIRED)
 find_package (PCL 1.6.0 REQUIRED)
 find_package (CGAL  COMPONENTS Qt4)
+
 if(CGAL_FOUND)
     include(${CGAL_USE_FILE})
     include_directories (BEFORE "../../include")

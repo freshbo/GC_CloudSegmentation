@@ -166,6 +166,46 @@ namespace operation
 		return;
 	}
 
+	Mesh PCLtriangulation(PointCloudT::Ptr inputCloud,PointCloudN::Ptr normals)
+	{
+		//INitialize Clouds
+		pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>());
+		pcl::copyPointCloud(*inputCloud,*cloud);
+		pcl::PointCloud<pcl::PointNormal>::Ptr cloud_with_normals(new pcl::PointCloud<pcl::PointNormal>());
+		pcl::concatenateFields(*cloud,*normals,*cloud_with_normals);
+		
+		// Create search tree*
+		pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
+		tree2->setInputCloud (cloud_with_normals);
+
+		// Initialize objects
+		pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
+		pcl::PolygonMesh triangles;
+
+		// Set the maximum distance between connected points (maximum edge length)
+		gp3.setSearchRadius (100);
+
+		// Set typical values for the parameters
+		gp3.setMu (2.5);
+		gp3.setMaximumNearestNeighbors (100);
+		gp3.setMaximumSurfaceAngle(M_PI);
+		gp3.setMinimumAngle(M_PI/4);
+		gp3.setMaximumAngle(M_PI/2);
+		
+		gp3.setNormalConsistency(true);
+		
+
+		// Get result
+		gp3.setInputCloud (cloud_with_normals);
+		gp3.setSearchMethod (tree2);
+		gp3.reconstruct (triangles);
+
+		// Additional vertex information
+		std::vector<int> parts = gp3.getPartIDs();
+		std::vector<int> states = gp3.getPointStates();
+		
+		return triangles;
+	}
 }//end namespace operation
 
 namespace Segmentation
