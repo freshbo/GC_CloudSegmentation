@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun 22. Feb 22:52:17 2015
+** Created: Tue 24. Feb 15:50:19 2015
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -452,6 +452,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
+        menuBar->setEnabled(true);
         menuBar->setGeometry(QRect(0, 0, 1048, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
@@ -463,7 +464,6 @@ public:
         menuBar->addAction(menuEdit->menuAction());
         menuFile->addAction(actionLoad);
         menuFile->addAction(actionExit);
-        menuEdit->addAction(actionClear_Clouds);
 
         retranslateUi(MainWindow);
 

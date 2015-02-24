@@ -8,28 +8,34 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
    	ui->setupUi(this);
 	this->setWindowTitle("Point Clout Segmentation");
 	
-	//Connect SIGNALS and SLOTS
-	connect (ui->actionLoad,SIGNAL(triggered()),this,SLOT(loadFrame()));
+	/*	SLOTS	*/
+	//Load Point Clouds, Frames
+	connect (ui->actionLoad,SIGNAL(triggered()),this,SLOT(loadFrame())); //not yet implemented
     connect (ui->loadButton,SIGNAL(released()),this,SLOT(loadPC()));
-    connect (ui->cleanButton,SIGNAL(released()),this,SLOT(statisticalOutliers()));
-	connect (ui->SegmentButton,SIGNAL(released()),this,SLOT(BinSeg(void)));
+	//Controller: Which PointCloud can be seen?
 	connect (ui->FrameScrollBar, SIGNAL(valueChanged(int)), this, SLOT(frameScroll(int)));
+	//Outlier Removal
+	connect (ui->cleanButton,SIGNAL(released()),this,SLOT(statisticalOutliers()));
+	//Calculate Curvature, Segmentations, Downsampling
 	connect (ui->computeCurvature,SIGNAL(released()),this,SLOT(computeCurvature()));
-	connect (ui->CurvColorCode,SIGNAL(toggled(bool)),this,SLOT(showCurvature(bool)));
-	connect (ui->SegColorCode,SIGNAL(toggled(bool)),this,SLOT(showbinSegmentation(bool)));
+	connect (ui->SegmentButton,SIGNAL(released()),this,SLOT(BinSeg(void)));
 	connect (ui->sampleButton,SIGNAL(released()),this,SLOT(downsample()));	
+	//Gui State (see orig. color, Curvature, Segmentations, PointSize in Viewer, etc)
+	connect (ui->ShowOriginal,SIGNAL(toggled(bool)),this,SLOT(updateGUIstate(bool)));
+	connect (ui->CurvColorCode,SIGNAL(toggled(bool)),this,SLOT(updateGUIstate(bool)));
+	connect (ui->SegColorCode,SIGNAL(toggled(bool)),this,SLOT(updateGUIstate(bool)));
 	connect (ui->horizontalSlider_p, SIGNAL (valueChanged (int)), this, SLOT (pSliderValueChanged (int)));
-	connect (ui->actionExit,SIGNAL(triggered()),this,SLOT(exit(void)));
+	//Exit Program
+	connect (ui->actionExit,SIGNAL(triggered()),this,SLOT(close()));
 
-	
 	//Set Up VTK window
 	viewer.reset(new pcl::visualization::PCLVisualizer("Viewer",false));
 	ui->qvtkWidget->SetRenderWindow (viewer->getRenderWindow ());
 	viewer->setBackgroundColor(0.941,0.941,0.941);
 	viewer->setupInteractor (ui->qvtkWidget->GetInteractor (), ui->qvtkWidget->GetRenderWindow ());
 
-	//sets the currently selected Point Cloud
-	t = 0;
+	//init current PointCloud
+	t = -1;
 
 	
 }
@@ -83,10 +89,11 @@ void MainWindow::loadPC(void)
 	//push added to the vector
 	Frame.push_back(H_t);
 	
-	//set correct slider properties
-	ui->FrameScrollBar->setMaximum(Frame.size()-1);
-	ui->FrameScrollBar->setValue(Frame.size()-1);
 	t = Frame.size()-1;
+	//set correct slider properties
+	ui->FrameScrollBar->setMaximum(t);
+	ui->FrameScrollBar->setValue(t);
+	
 
 }
 
@@ -136,6 +143,8 @@ void MainWindow::showCloud(void)
 //Normal Calculation
 void MainWindow::computeCurvature(void)
 {
+	if(t==-1)
+		return;
 	std::cout<<"compute Normals"<<std::endl;
 	operation::calcCurvature(Frame.at(t)->cloud,Frame.at(t)->normal);
 	//render Properties
@@ -147,6 +156,8 @@ void MainWindow::computeCurvature(void)
 //Statistical Outlier Removal
 void MainWindow::statisticalOutliers(void)
 {
+	if(t==-1)
+		return;
     pcl::PointCloud<pcl::PointXYZ>::Ptr tmpIN(new pcl::PointCloud<pcl::PointXYZ>());
     pcl::copyPointCloud(*Frame.at(t)->cloud,*tmpIN);
 
@@ -164,6 +175,8 @@ void MainWindow::statisticalOutliers(void)
 }
 void MainWindow::radiusOutliers(void)
 {
+	if(t==-1)
+		return;
 	pcl::PointCloud<pcl::PointXYZ>::Ptr tmpIN(new pcl::PointCloud<pcl::PointXYZ>());
     pcl::copyPointCloud(*Frame.at(t)->cloud,*tmpIN);
 	
@@ -185,7 +198,8 @@ void MainWindow::downsample()
 // this method creates a downsampled 
 {
 	
-	
+	if(t==-1)
+		return;
 	QString textFieldInput = ui->sampleNumberField->text();
 	if(textFieldInput=="")
 	{	
@@ -207,40 +221,37 @@ void MainWindow::downsample()
 
 
 
-//visibility Checkboxes
-void MainWindow::showCurvature(bool checked)
+//Gui State
+void MainWindow::updateGUIstate(bool)
 {	
-	g_renderSeq++;
-	showCloud();
-}
-void MainWindow::showbinSegmentation(bool)
-{
+	//Called whenever a Radio Button is changed:
+	if(t==-1)
+		return;
 	g_renderSeq++;
 	showCloud();
 }
 //Point Size
 void MainWindow::pSliderValueChanged (int value)
 {
+	if(t==-1)
+		return;
 	/*
 	This function lets me controll the Size of the Points
 	It is calles whenever the GUI-Slider is changed.
 	*/
+	//g_renderSeq++;
 	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, value, Frame.at(t)->ID);
 	ui->qvtkWidget->update();
 	
 }
 
-void MainWindow::exit()
-{
-	std::cout<<"EXINTING PROGRAM"<<std::endl;
-}
-
-
 void MainWindow::BinSeg()
 {
+	if(t==-1)
+		return;
 	if(!Frame.at(t)->curv)
 		computeCurvature();
-	Frame.at(t)->binCluster = Segmentation::MinCut(Frame.at(t)->cloud,Frame.at(t)->normal, Frame.at(t)->L,Frame.at(t)->S);
+	Frame.at(t)->binCluster = Segmentation::binary(Frame.at(t)->cloud,Frame.at(t)->normal, Frame.at(t)->L,Frame.at(t)->S);
 	//render Properties
 	Frame.at(t)->binSeg=true;
 	Frame.at(t)->renderSeq=-1;

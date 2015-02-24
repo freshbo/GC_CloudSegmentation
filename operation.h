@@ -33,7 +33,7 @@
 #include <pcl/filters/voxel_grid.h>
 
 //Graph
-#include <graph.h>
+#include "graph.h"
 
 
 //PCL typedefs for Point Clouds
@@ -68,6 +68,7 @@ namespace operation
 
 namespace Segmentation
 {
-	vector<int>			MinCut(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr L,PointCloudT::Ptr S);
+	vector<int>			binary(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr L,PointCloudT::Ptr S);
+	void				filterBinary(PointCloudT::Ptr leafs, PointCloudT::Ptr stems, vector<int>*labels);
 }
 

@@ -210,7 +210,7 @@ namespace operation
 
 namespace Segmentation
 {
-	vector<int> MinCut(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr Leafs ,PointCloudT::Ptr Stems)
+	vector<int> binary(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr Leafs ,PointCloudT::Ptr Stems)
 	{
 
 		int K = 10;
@@ -259,6 +259,7 @@ namespace Segmentation
 		binCluster.clear();
 
 		for(int i=0; i< cloud->size();i++){
+
 			if(g->what_segment(i) == GraphType::SOURCE){
 				Leafs->push_back(cloud->points[i]);
 				Leafs->points[leafPointCount].r = 0;
@@ -280,4 +281,8 @@ namespace Segmentation
 		delete g;
 		return binCluster;
 	}	
+	void filterBinary(PointCloudT::Ptr leafs, PointCloudT::Ptr stems, vector<int>*labels)
+	{
+
+	}
 }

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Mon 23. Feb 15:08:42 2015
+** Created: Tue 24. Feb 15:47:33 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      13,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -40,10 +40,8 @@ static const uint qt_meta_data_MainWindow[] = {
      120,   11,   11,   11, 0x0a,
      133,   11,   11,   11, 0x0a,
      152,   11,   11,   11, 0x0a,
-     172,   11,   11,   11, 0x0a,
-     198,   11,   11,   11, 0x0a,
-     205,   11,   11,   11, 0x0a,
-     217,   11,   11,   11, 0x0a,
+     173,   11,   11,   11, 0x0a,
+     185,   11,   11,   11, 0x0a,
 
        0        // eod
 };
@@ -53,8 +51,7 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "pSliderValueChanged(int)\0loadPC()\0"
     "loadFrame()\0statisticalOutliers()\0"
     "radiusOutliers()\0downsample()\0"
-    "computeCurvature()\0showCurvature(bool)\0"
-    "showbinSegmentation(bool)\0exit()\0"
+    "computeCurvature()\0updateGUIstate(bool)\0"
     "showCloud()\0BinSeg()\0"
 };
 
@@ -72,11 +69,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 5: _t->radiusOutliers(); break;
         case 6: _t->downsample(); break;
         case 7: _t->computeCurvature(); break;
-        case 8: _t->showCurvature((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 9: _t->showbinSegmentation((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 10: _t->exit(); break;
-        case 11: _t->showCloud(); break;
-        case 12: _t->BinSeg(); break;
+        case 8: _t->updateGUIstate((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 9: _t->showCloud(); break;
+        case 10: _t->BinSeg(); break;
         default: ;
         }
     }
@@ -114,9 +109,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 13)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 13;
+        _id -= 11;
     }
     return _id;
 }

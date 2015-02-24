@@ -40,9 +40,8 @@ class MainWindow : public QMainWindow
 		void radiusOutliers(void);
 		void downsample(void);
 		void computeCurvature(void);
-		void showCurvature(bool);
-		void showbinSegmentation(bool);
-		void exit(void);
+		
+		void updateGUIstate(bool);
 		void showCloud(void);
 		void BinSeg(void);
 		

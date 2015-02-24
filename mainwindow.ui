@@ -473,6 +473,9 @@
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -492,7 +495,6 @@
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionClear_Clouds"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
