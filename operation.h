@@ -36,6 +36,8 @@
 #include "graph.h"
 
 
+
+
 //PCL typedefs for Point Clouds
 typedef pcl::PointXYZRGBA					PointT;
 typedef pcl::PointCloud<PointT>				PointCloudT;
