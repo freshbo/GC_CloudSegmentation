@@ -9,6 +9,7 @@
 		ID = "";									//name in viewer
 		cloud.reset(new PointCloudT());				//PointCloud to work with
 		normal.reset(new PointCloudN());			//Normals
+		triangulation.reset(new pclMesh());
 		
 		L.reset(new PointCloudT());					//Leaf Points
 		S.reset(new PointCloudT());					//Stem Points
@@ -21,6 +22,7 @@
 		curv	=	false;
 		binSeg	=	false;
 		down	=	false;
+		tri		=	false;
 		
 		
 	}

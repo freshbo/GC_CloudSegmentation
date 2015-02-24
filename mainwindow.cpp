@@ -16,15 +16,19 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	connect (ui->FrameScrollBar, SIGNAL(valueChanged(int)), this, SLOT(frameScroll(int)));
 	//Outlier Removal
 	connect (ui->cleanButton,SIGNAL(released()),this,SLOT(statisticalOutliers()));
-	//Calculate Curvature, Segmentations, Downsampling
+	//Calculate Curvature, Segmentations, Downsampling,Triangulation
 	connect (ui->computeCurvature,SIGNAL(released()),this,SLOT(computeCurvature()));
 	connect (ui->SegmentButton,SIGNAL(released()),this,SLOT(BinSeg(void)));
 	connect (ui->sampleButton,SIGNAL(released()),this,SLOT(downsample()));	
+	connect (ui->triangulationButton,SIGNAL(released()),this,SLOT(triangulation()));	
+	
+	
 	//Gui State (see orig. color, Curvature, Segmentations, PointSize in Viewer, etc)
 	connect (ui->ShowOriginal,SIGNAL(toggled(bool)),this,SLOT(updateGUIstate(bool)));
 	connect (ui->CurvColorCode,SIGNAL(toggled(bool)),this,SLOT(updateGUIstate(bool)));
 	connect (ui->SegColorCode,SIGNAL(toggled(bool)),this,SLOT(updateGUIstate(bool)));
 	connect (ui->horizontalSlider_p, SIGNAL (valueChanged (int)), this, SLOT (pSliderValueChanged (int)));
+	connect (ui->ShowMesh,SIGNAL(toggled(bool)),this,SLOT(showCloud()));	
 	//Exit Program
 	connect (ui->actionExit,SIGNAL(triggered()),this,SLOT(close()));
 
@@ -116,6 +120,8 @@ void MainWindow::frameScroll(int value)
 
 void MainWindow::showCloud(void)
 {
+	if(t==-1)
+		return;
 	if (Frame.at(t)->renderSeq!=g_renderSeq){
 		Frame.at(t)->renderSeq = g_renderSeq;
 
@@ -131,6 +137,14 @@ void MainWindow::showCloud(void)
 	viewer->addPointCloud(Frame.at(t)->cloud,Frame.at(t)->ID);
 	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, ui->horizontalSlider_p->value(), Frame.at(t)->ID);
 	
+	
+	if(Frame.at(t)->tri && ui->ShowMesh->isChecked())
+		viewer->addPolygonMesh(*Frame.at(t)->triangulation, "mesh");
+	else
+		viewer->removePolygonMesh("mesh");
+	
+	
+
 	ui->PCNumberLABEL->setText(QString::number(t));
 	ui->InfoBox->setText(QString::fromStdString(Frame.at(t)->ID));
 	ui->CloudSizeLABEL->setText(QString::number(Frame.at(t)->cloud->size()));	
@@ -139,21 +153,7 @@ void MainWindow::showCloud(void)
 }
 
 
-
-//Normal Calculation
-void MainWindow::computeCurvature(void)
-{
-	if(t==-1)
-		return;
-	std::cout<<"compute Normals"<<std::endl;
-	operation::calcCurvature(Frame.at(t)->cloud,Frame.at(t)->normal);
-	//render Properties
-	Frame.at(t)->curv = true;
-	Frame.at(t)->renderSeq=-1;
-	showCloud();
-}
-
-//Statistical Outlier Removal
+//Outlier
 void MainWindow::statisticalOutliers(void)
 {
 	if(t==-1)
@@ -194,10 +194,23 @@ void MainWindow::radiusOutliers(void)
     showCloud();
 }
 
+
+
+//Calculations
+void MainWindow::computeCurvature(void)
+{
+	if(t==-1)
+		return;
+	std::cout<<"compute Normals"<<std::endl;
+	operation::calcCurvature(Frame.at(t)->cloud,Frame.at(t)->normal);
+	//render Properties
+	Frame.at(t)->curv = true;
+	Frame.at(t)->renderSeq=-1;
+	showCloud();
+}
 void MainWindow::downsample()
 // this method creates a downsampled 
-{
-	
+{	
 	if(t==-1)
 		return;
 	QString textFieldInput = ui->sampleNumberField->text();
@@ -206,15 +219,20 @@ void MainWindow::downsample()
 		cout<<"please Enter Valid float"<<endl;
 		return;
 	}
-	
 	float sampleSize = textFieldInput.toFloat();
-	
 	operation::downsample(Frame.at(t)->cloud,sampleSize);
-	//operation::calcNormals(Frame.at(t)->sampleC,Frame.at(t)->sampleN);
-
+	MainWindow::showCloud();
+}
+void MainWindow::triangulation(void)
+{
+	if(t==-1)
+		return;
+	if(Frame.at(t)->cloud->size() != Frame.at(t)->normal->size())
+		operation::calcCurvature(Frame.at(t)->cloud,Frame.at(t)->normal);
+	operation::PCLtriangulation(Frame.at(t)->cloud,Frame.at(t)->normal,Frame.at(t)->triangulation);
+	Frame.at(t)->tri = true;
+	MainWindow::showCloud();
 	
-	//operation::curvatureColorMap(Frame.at(t)->sampleN,Frame.at(t)->sampleC);
-	viewer->updatePointCloud(Frame.at(t)->cloud,Frame.at(t)->ID);
 	ui->qvtkWidget->update();
 }
 
@@ -235,11 +253,6 @@ void MainWindow::pSliderValueChanged (int value)
 {
 	if(t==-1)
 		return;
-	/*
-	This function lets me controll the Size of the Points
-	It is calles whenever the GUI-Slider is changed.
-	*/
-	//g_renderSeq++;
 	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, value, Frame.at(t)->ID);
 	ui->qvtkWidget->update();
 	

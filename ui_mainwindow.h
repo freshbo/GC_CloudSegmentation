@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue 24. Feb 15:50:19 2015
+** Created: Tue 24. Feb 18:30:16 2015
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -71,7 +71,7 @@ public:
     QFrame *line_5;
     QVBoxLayout *Triangulation_LAYOUT;
     QLabel *label_2;
-    QPushButton *computeTriangulation;
+    QPushButton *triangulationButton;
     QCheckBox *ShowMesh;
     QFrame *line_2;
     QHBoxLayout *horizontalLayout_2;
@@ -292,10 +292,10 @@ public:
 
         Triangulation_LAYOUT->addWidget(label_2);
 
-        computeTriangulation = new QPushButton(centralWidget);
-        computeTriangulation->setObjectName(QString::fromUtf8("computeTriangulation"));
+        triangulationButton = new QPushButton(centralWidget);
+        triangulationButton->setObjectName(QString::fromUtf8("triangulationButton"));
 
-        Triangulation_LAYOUT->addWidget(computeTriangulation);
+        Triangulation_LAYOUT->addWidget(triangulationButton);
 
         ShowMesh = new QCheckBox(centralWidget);
         ShowMesh->setObjectName(QString::fromUtf8("ShowMesh"));
@@ -494,7 +494,7 @@ public:
         sampleNumberField->setPlaceholderText(QString());
         SampleSaveButton->setText(QApplication::translate("MainWindow", "Save", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWindow", "Triangulation", 0, QApplication::UnicodeUTF8));
-        computeTriangulation->setText(QApplication::translate("MainWindow", "Calculate", 0, QApplication::UnicodeUTF8));
+        triangulationButton->setText(QApplication::translate("MainWindow", "Calculate", 0, QApplication::UnicodeUTF8));
         ShowMesh->setText(QApplication::translate("MainWindow", "Show Mesh", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Points: ", 0, QApplication::UnicodeUTF8));
         CloudSizeLABEL->setText(QApplication::translate("MainWindow", "0", 0, QApplication::UnicodeUTF8));

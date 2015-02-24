@@ -43,12 +43,10 @@ typedef pcl::Normal							PointN;
 typedef pcl::PointCloud<PointN>				PointCloudN;
 typedef pcl::PointNormal					PointNP;
 typedef pcl::PointCloud<PointNP>			PointCloudNP;
-typedef pcl::PolygonMesh					Mesh;
+typedef pcl::PolygonMesh					pclMesh;
 
 //Typedef MaxFlow Graph
 typedef Graph<float,float,float> GraphType;
-
-
 
 namespace operation
 {
@@ -63,7 +61,7 @@ namespace operation
 	void				colorizeBinCluster(PointCloudT::Ptr cloud, vector<int> cluster);
 	void				downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr simpleCloud,float);
 
-	Mesh				PCLtriangulation(PointCloudT::Ptr,PointCloudN::Ptr);
+	void				PCLtriangulation(PointCloudT::Ptr,PointCloudN::Ptr,pclMesh::Ptr);
 }
 
 namespace Segmentation

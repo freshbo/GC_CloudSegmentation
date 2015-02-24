@@ -166,7 +166,7 @@ namespace operation
 		return;
 	}
 
-	Mesh PCLtriangulation(PointCloudT::Ptr inputCloud,PointCloudN::Ptr normals)
+	void PCLtriangulation(PointCloudT::Ptr inputCloud,PointCloudN::Ptr normals, pclMesh::Ptr mesh)
 	{
 		//INitialize Clouds
 		pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>());
@@ -175,36 +175,47 @@ namespace operation
 		pcl::concatenateFields(*cloud,*normals,*cloud_with_normals);
 		
 		// Create search tree*
-		pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
-		tree2->setInputCloud (cloud_with_normals);
+		pcl::search::KdTree<pcl::PointNormal>::Ptr tree (new pcl::search::KdTree<pcl::PointNormal>);
+		tree->setInputCloud (cloud_with_normals);
 
 		// Initialize objects
 		pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
-		pcl::PolygonMesh triangles;
 
 		// Set the maximum distance between connected points (maximum edge length)
-		gp3.setSearchRadius (100);
+		gp3.setSearchRadius (3);
 
-		// Set typical values for the parameters
-		gp3.setMu (2.5);
 		gp3.setMaximumNearestNeighbors (100);
-		gp3.setMaximumSurfaceAngle(M_PI);
-		gp3.setMinimumAngle(M_PI/4);
-		gp3.setMaximumAngle(M_PI/2);
-		
-		gp3.setNormalConsistency(true);
-		
+		gp3.setMu (100);
+
+		gp3.setNormalConsistency(false);
 
 		// Get result
 		gp3.setInputCloud (cloud_with_normals);
-		gp3.setSearchMethod (tree2);
-		gp3.reconstruct (triangles);
+		gp3.setSearchMethod (tree);
+		gp3.reconstruct (*mesh);
 
 		// Additional vertex information
 		std::vector<int> parts = gp3.getPartIDs();
 		std::vector<int> states = gp3.getPointStates();
+		int maxi =0;
+		for(int i=0;i<1;i++)
+		{
+			int k = mesh->polygons.at(i).vertices.size();
+			for (int j=0; j<k;j++)
+			{	
+				int a = mesh->polygons.at(i).vertices.at(j);
+				cout<<a<<endl;
+				inputCloud->at(a).r = 255;
+				inputCloud->at(a).g = 0;
+				inputCloud->at(a).b = 0;
+			}
+			cout<<endl;
+		}
 		
-		return triangles;
+		
+		
+		
+		
 	}
 }//end namespace operation
 
@@ -235,14 +246,15 @@ namespace Segmentation
 		for (int i=0; i<cloud->size();i++)
 		{			
 			//Search KNN for point i
+			pointIdxNKNSearch.clear();
 			kdtree.nearestKSearch(cloud->points[i],K,pointIdxNKNSearch,pointNKNsquaredDistance);
-			
 			//Walk through NKN and sum up the curvature
 			for(int k =0; k<pointIdxNKNSearch.size (); k++)
 			{	
 				//Weight increasing significance of neighborhood
 				float w = 3.5;
 				int j = pointIdxNKNSearch[k];
+				//if (i != j)
 				g->add_edge(i,j,w*max(1/(normals->points.at(i).curvature),1/(normals->points.at(j).curvature)),0);
 				
 			}
