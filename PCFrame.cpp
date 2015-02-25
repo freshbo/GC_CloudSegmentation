@@ -4,7 +4,7 @@
 
 	hypothesis::hypothesis(void)
 	{
-		
+		original.reset(new PointCloudT());				//PointCloud to work with
 		
 		ID = "";									//name in viewer
 		cloud.reset(new PointCloudT());				//PointCloud to work with
@@ -16,7 +16,9 @@
 
 		phi  =	0;									//phi Function |L| x |S|  Gives the number of Organs (leafs x stems)
 		
-		renderSeq = g_renderSeq;
+
+		//Render Sequence
+		renderSeq =-1;
 		
 		//GUI booleans.. curvature, or segmentation already computed? 
 		curv	=	false;
@@ -27,8 +29,6 @@
 		
 	}
 
-	hypothesis::hypothesis(PointCloudT cloud ,PointCloudN normals, std::string ID)
-	{}
 
 	hypothesis::~hypothesis(void)
 	{}

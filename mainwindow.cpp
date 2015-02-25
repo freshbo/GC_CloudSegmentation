@@ -79,6 +79,7 @@ void MainWindow::loadPC(void)
 	//load file into the PCL
 	string ID = operation::loadPLY(path,H_t->cloud); //load PLY into cloud;
 	//default (green) color:
+	pcl::copyPointCloud(*H_t->cloud, *H_t->original);
 	operation::colorizeDefault(H_t->cloud);
 	
 	//clear viewport
@@ -94,10 +95,17 @@ void MainWindow::loadPC(void)
 	Frame.push_back(H_t);
 	
 	t = Frame.size()-1;
+	
+	
+
 	//set correct slider properties
 	ui->FrameScrollBar->setMaximum(t);
 	ui->FrameScrollBar->setValue(t);
 	
+	
+	ui->PCNumberLABEL->setText("");
+	ui->InfoBox->setText("");
+	ui->CloudSizeLABEL->setText("");	
 
 }
 
@@ -129,7 +137,7 @@ void MainWindow::showCloud(void)
 			operation::colorizeCurvature(Frame.at(t)->normal,Frame.at(t)->cloud);
 		else if(ui->SegColorCode->isChecked() && Frame.at(t)->binSeg)
 			operation::colorizeBinCluster(Frame.at(t)->cloud,Frame.at(t)->binCluster);
-		else
+		else 
 			operation::colorizeDefault(Frame.at(t)->cloud);
 	}
 
@@ -191,7 +199,8 @@ void MainWindow::radiusOutliers(void)
 
 	Frame.at(t)->cloud->clear();
     pcl::copyPointCloud(*tmpIN,*Frame.at(t)->cloud);
-    showCloud();
+	g_renderSeq++;
+	showCloud();
 }
 
 
@@ -220,9 +229,15 @@ void MainWindow::downsample()
 		return;
 	}
 	float sampleSize = textFieldInput.toFloat();
-	operation::downsample(Frame.at(t)->cloud,sampleSize);
+	operation::downsample(Frame.at(t)->original, Frame.at(t)->cloud,sampleSize);
+	Frame.at(t)->renderSeq=-1;
+	Frame.at(t)->tri = false;
+	Frame.at(t)->binSeg=false;
+	Frame.at(t)->curv = false;
 	MainWindow::showCloud();
+
 }
+
 void MainWindow::triangulation(void)
 {
 	if(t==-1)

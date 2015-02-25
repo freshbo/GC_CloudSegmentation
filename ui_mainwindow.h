@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue 24. Feb 18:30:16 2015
+** Created: Wed 25. Feb 16:39:42 2015
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -501,7 +501,7 @@ public:
         InfoBox->setText(QString());
         label_7->setText(QApplication::translate("MainWindow", "PointCloud Nr. : ", 0, QApplication::UnicodeUTF8));
         PCNumberLABEL->setText(QApplication::translate("MainWindow", "0", 0, QApplication::UnicodeUTF8));
-        ShowOriginal->setText(QApplication::translate("MainWindow", "RadioButton", 0, QApplication::UnicodeUTF8));
+        ShowOriginal->setText(QApplication::translate("MainWindow", "ShowOriginal", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

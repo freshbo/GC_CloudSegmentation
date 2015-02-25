@@ -43,6 +43,7 @@ class MainWindow : public QMainWindow
 		void computeCurvature(void);
 		void triangulation(void);
 		void BinSeg(void);
+		void LeafSeg(void);
 		//Gui & Viz
 		void frameScroll(int value);
 		void updateGUIstate(bool);

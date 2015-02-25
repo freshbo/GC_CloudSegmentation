@@ -25,6 +25,9 @@
 
 //Triangulation
 #include <pcl/surface/gp3.h>
+//Boost Sparse Matrix for Adjacency Matrix
+#include <boost/numeric/ublas/matrix_sparse.hpp>
+#include <boost/numeric/ublas/io.hpp>
 
 //visualization
 #include <pcl/visualization/pcl_visualizer.h>
@@ -61,9 +64,10 @@ namespace operation
 	void				colorizeDefault(PointCloudT::Ptr);
 	void				colorizeCurvature(PointCloudN::Ptr curve, PointCloudT::Ptr cloud);
 	void				colorizeBinCluster(PointCloudT::Ptr cloud, vector<int> cluster);
-	void				downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr simpleCloud,float);
-
+	void				downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,float);
+	
 	void				PCLtriangulation(PointCloudT::Ptr,PointCloudN::Ptr,pclMesh::Ptr);
+	float				dist(pcl::PointXYZRGBA p, PointCloudT::Ptr cloud);
 }
 
 namespace Segmentation

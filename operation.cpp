@@ -150,7 +150,7 @@ namespace operation
 
 	}
 
-	void downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud, float sampleSize)
+	void downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr input, pcl::PointCloud<pcl::PointXYZRGBA>::Ptr output, float sampleSize)
 	{
 		
 		PointCloudT::Ptr tmp;
@@ -158,10 +158,10 @@ namespace operation
 		
 		
 		pcl::VoxelGrid<pcl::PointXYZRGBA> sor;
-		sor.setInputCloud(cloud);
+		sor.setInputCloud(input);
 		sor.setLeafSize (sampleSize, sampleSize, sampleSize);
 		sor.filter (*tmp);
-		pcl::copyPointCloud(*tmp,*cloud);
+		pcl::copyPointCloud(*tmp,*output);
 				
 		return;
 	}
@@ -197,26 +197,57 @@ namespace operation
 		// Additional vertex information
 		std::vector<int> parts = gp3.getPartIDs();
 		std::vector<int> states = gp3.getPointStates();
-		int maxi =0;
-		for(int i=0;i<1;i++)
+		
+		for(int i =0;i<parts.size();i++)
+		{
+			if(mesh->cloud.data.at(i)== gp3.FREE)
+			{
+				inputCloud->at(i).r = 255;
+				inputCloud->at(i).g = 0;
+				inputCloud->at(i).b = 0;
+			}
+		}
+		
+		/*
+		for(int i=0;i<mesh->polygons.size();i++)
 		{
 			int k = mesh->polygons.at(i).vertices.size();
+			
 			for (int j=0; j<k;j++)
 			{	
 				int a = mesh->polygons.at(i).vertices.at(j);
-				cout<<a<<endl;
-				inputCloud->at(a).r = 255;
-				inputCloud->at(a).g = 0;
-				inputCloud->at(a).b = 0;
+				
+				
+				{	inputCloud->at(a).r = 255;
+					inputCloud->at(a).g = 0;
+					inputCloud->at(a).b = 0;
+				}
 			}
-			cout<<endl;
 		}
 		
 		
 		
+
+		*/
 		
 		
 	}
+
+	float dist(pcl::PointXYZRGBA p, PointCloudT::Ptr cloud)
+	{
+		if(cloud->size()==0)
+			return numeric_limits<float>::infinity(); //Return Infinity If cloud is Empty
+		int K = 1;
+		pcl::KdTreeFLANN<pcl::PointXYZRGBA> kdTree;
+		vector <int> pointIdx;
+		vector <float> sqDist;
+		kdTree.setInputCloud(cloud);
+		kdTree.nearestKSearch(p, K, pointIdx,sqDist);
+		if(sqDist.size()<1)
+			return -1; //Return -1 if no nearest neighbor was found
+		return sqrt(sqDist.at(0)); 
+	}
+
 }//end namespace operation
 
 namespace Segmentation

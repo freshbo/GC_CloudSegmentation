@@ -462,7 +462,7 @@
         <item>
          <widget class="QRadioButton" name="ShowOriginal">
           <property name="text">
-           <string>RadioButton</string>
+           <string>ShowOriginal</string>
           </property>
          </widget>
         </item>

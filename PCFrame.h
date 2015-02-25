@@ -7,9 +7,9 @@
 struct hypothesis
 {
 	hypothesis(void);
-	hypothesis(PointCloudT cloud ,PointCloudN normals, std::string ID);
 	~hypothesis(void);
 	
+	PointCloudT::Ptr original;
 
 	string ID;					//name of the Cloud in Viewer
 	PointCloudT::Ptr cloud;		//stores all points of the PointCloud

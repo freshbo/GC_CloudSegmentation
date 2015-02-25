@@ -6,7 +6,7 @@
 
 
 /*
-	special constants for node->parent
+	special constants for node->parent. Duplicated in graph.cpp, both should match!
 */
 #define TERMINAL ( (arc *) 1 )		/* to terminal */
 #define ORPHAN   ( (arc *) 2 )		/* orphan */
