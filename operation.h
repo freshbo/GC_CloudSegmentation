@@ -66,13 +66,15 @@ namespace operation
 	void				colorizeBinCluster(PointCloudT::Ptr cloud, vector<int> cluster);
 	void				downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,float);
 	
-	void				PCLtriangulation(PointCloudT::Ptr,PointCloudN::Ptr,pclMesh::Ptr);
+	vector<int>			PCLtriangulation(PointCloudT::Ptr,PointCloudN::Ptr,pclMesh::Ptr);
 	float				dist(pcl::PointXYZRGBA p, PointCloudT::Ptr cloud);
 }
 
 namespace Segmentation
 {
 	vector<int>			binary(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr L,PointCloudT::Ptr S);
-	void				filterBinary(PointCloudT::Ptr leafs, PointCloudT::Ptr stems, vector<int>*labels);
+	void				filterBinary(PointCloudT::Ptr leafs, PointCloudT::Ptr stems, vector<int>*labels); //NOT YET IMPLEMENTED
+	void				multiLeaf(PointCloudT::Ptr,vector<PointCloudT::Ptr>,vector<int>);
+
 }
 

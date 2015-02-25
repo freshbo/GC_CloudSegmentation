@@ -10,7 +10,7 @@ struct hypothesis
 	~hypothesis(void);
 	
 	PointCloudT::Ptr original;
-
+	
 	string ID;					//name of the Cloud in Viewer
 	PointCloudT::Ptr cloud;		//stores all points of the PointCloud
 	PointCloudN::Ptr normal;	//stores the corresponding normals and curvature to cloud
@@ -19,9 +19,12 @@ struct hypothesis
 	/*  Binary Clustering  */
 	vector<int> binCluster;		//represents as Integer the Cluster each Point of cloud belongs to
 	PointCloudT::Ptr L;			//binary segmented cloud: All leaf points
-	vector<int>LCluster;		//represents as integer the Leaf each Point in L belongs to
+	vector<PointCloudT::Ptr> leafs; //Vector containing each leaf as PointCloudT
+	vector<int>LeafLabels;		//represents the label number of each leaf in vector leaf
+
 	PointCloudT::Ptr S;			//binary segmented cloud: All Stem Points
-	vector<int>SCluster;		//represents as integer the Leaf each Point in L belongs to
+	vector<PointCloudT::Ptr> stems; //Vector containing each stem as PointCloudT
+	vector<int>StemLabels;		//represents the label number of each stem in vector stem
 
 	
 	

@@ -19,8 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	//Calculate Curvature, Segmentations, Downsampling,Triangulation
 	connect (ui->computeCurvature,SIGNAL(released()),this,SLOT(computeCurvature()));
 	connect (ui->SegmentButton,SIGNAL(released()),this,SLOT(BinSeg(void)));
+	connect (ui->MultiLeafButton,SIGNAL(released()),this,SLOT(LeafSeg(void)));
 	connect (ui->sampleButton,SIGNAL(released()),this,SLOT(downsample()));	
-	connect (ui->triangulationButton,SIGNAL(released()),this,SLOT(triangulation()));	
+	connect (ui->triangulationButton,SIGNAL(released()),this,SLOT(triangulation()));
+	
 	
 	
 	//Gui State (see orig. color, Curvature, Segmentations, PointSize in Viewer, etc)
@@ -29,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	connect (ui->SegColorCode,SIGNAL(toggled(bool)),this,SLOT(updateGUIstate(bool)));
 	connect (ui->horizontalSlider_p, SIGNAL (valueChanged (int)), this, SLOT (pSliderValueChanged (int)));
 	connect (ui->ShowMesh,SIGNAL(toggled(bool)),this,SLOT(showCloud()));	
+	connect (ui->ShowLeafs,SIGNAL(toggled(bool)),this,SLOT(showCloud()));	
 	//Exit Program
 	connect (ui->actionExit,SIGNAL(triggered()),this,SLOT(close()));
 
@@ -130,32 +133,39 @@ void MainWindow::showCloud(void)
 {
 	if(t==-1)
 		return;
-	if (Frame.at(t)->renderSeq!=g_renderSeq){
-		Frame.at(t)->renderSeq = g_renderSeq;
+	if(ui->ShowLeafs->isChecked()&&Frame[t]->L->size()!=0){
+		viewer->removeAllPointClouds();
+		viewer->removePolygonMesh("mesh");
+		viewer->addPointCloud(Frame[t]->L,Frame[t]->ID);
+		ui->qvtkWidget->update();
+		return;
+	}
+	if (Frame[t]->renderSeq!=g_renderSeq){
+		Frame[t]->renderSeq = g_renderSeq;
 
-		if(ui->CurvColorCode->isChecked()&& Frame.at(t)->curv)
-			operation::colorizeCurvature(Frame.at(t)->normal,Frame.at(t)->cloud);
-		else if(ui->SegColorCode->isChecked() && Frame.at(t)->binSeg)
-			operation::colorizeBinCluster(Frame.at(t)->cloud,Frame.at(t)->binCluster);
+		if(ui->CurvColorCode->isChecked()&& Frame[t]->curv)
+			operation::colorizeCurvature(Frame[t]->normal,Frame[t]->cloud);
+		else if(ui->SegColorCode->isChecked() && Frame[t]->binSeg)
+			operation::colorizeBinCluster(Frame[t]->cloud,Frame[t]->binCluster);
 		else 
-			operation::colorizeDefault(Frame.at(t)->cloud);
+			operation::colorizeDefault(Frame[t]->cloud);
 	}
 
 	viewer->removeAllPointClouds();
-	viewer->addPointCloud(Frame.at(t)->cloud,Frame.at(t)->ID);
-	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, ui->horizontalSlider_p->value(), Frame.at(t)->ID);
+	viewer->addPointCloud(Frame[t]->cloud,Frame[t]->ID);
+	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, ui->horizontalSlider_p->value(), Frame[t]->ID);
 	
 	
-	if(Frame.at(t)->tri && ui->ShowMesh->isChecked())
-		viewer->addPolygonMesh(*Frame.at(t)->triangulation, "mesh");
+	if(Frame[t]->tri && ui->ShowMesh->isChecked())
+		viewer->addPolygonMesh(*Frame[t]->triangulation, "mesh");
 	else
 		viewer->removePolygonMesh("mesh");
 	
 	
 
 	ui->PCNumberLABEL->setText(QString::number(t));
-	ui->InfoBox->setText(QString::fromStdString(Frame.at(t)->ID));
-	ui->CloudSizeLABEL->setText(QString::number(Frame.at(t)->cloud->size()));	
+	ui->InfoBox->setText(QString::fromStdString(Frame[t]->ID));
+	ui->CloudSizeLABEL->setText(QString::number(Frame[t]->cloud->size()));	
 
 	ui->qvtkWidget->update();
 }
@@ -167,7 +177,7 @@ void MainWindow::statisticalOutliers(void)
 	if(t==-1)
 		return;
     pcl::PointCloud<pcl::PointXYZ>::Ptr tmpIN(new pcl::PointCloud<pcl::PointXYZ>());
-    pcl::copyPointCloud(*Frame.at(t)->cloud,*tmpIN);
+    pcl::copyPointCloud(*Frame[t]->cloud,*tmpIN);
 
 	int meanK = ui->cleanMeanK->text().toFloat();
 	int thresh = ui->cleanThresh->text().toFloat();
@@ -176,8 +186,8 @@ void MainWindow::statisticalOutliers(void)
 	operation::statisticalOutlierRemoval(tmpIN,meanK,thresh);
     cout<<tmpIN->size()<<endl;
 
-	Frame.at(t)->cloud->clear();
-    pcl::copyPointCloud(*tmpIN,*Frame.at(t)->cloud);
+	Frame[t]->cloud->clear();
+    pcl::copyPointCloud(*tmpIN,*Frame[t]->cloud);
     showCloud();
 	
 }
@@ -186,7 +196,7 @@ void MainWindow::radiusOutliers(void)
 	if(t==-1)
 		return;
 	pcl::PointCloud<pcl::PointXYZ>::Ptr tmpIN(new pcl::PointCloud<pcl::PointXYZ>());
-    pcl::copyPointCloud(*Frame.at(t)->cloud,*tmpIN);
+    pcl::copyPointCloud(*Frame[t]->cloud,*tmpIN);
 	
 	float radius = -1;
 	radius = ui->cleanMeanK->text().toFloat();
@@ -197,8 +207,8 @@ void MainWindow::radiusOutliers(void)
 	operation::radiusOutlierRemoval(tmpIN,radius);
     cout<<tmpIN->size()<<endl;
 
-	Frame.at(t)->cloud->clear();
-    pcl::copyPointCloud(*tmpIN,*Frame.at(t)->cloud);
+	Frame[t]->cloud->clear();
+    pcl::copyPointCloud(*tmpIN,*Frame[t]->cloud);
 	g_renderSeq++;
 	showCloud();
 }
@@ -211,10 +221,10 @@ void MainWindow::computeCurvature(void)
 	if(t==-1)
 		return;
 	std::cout<<"compute Normals"<<std::endl;
-	operation::calcCurvature(Frame.at(t)->cloud,Frame.at(t)->normal);
+	operation::calcCurvature(Frame[t]->cloud,Frame[t]->normal);
 	//render Properties
-	Frame.at(t)->curv = true;
-	Frame.at(t)->renderSeq=-1;
+	Frame[t]->curv = true;
+	Frame[t]->renderSeq=-1;
 	showCloud();
 }
 void MainWindow::downsample()
@@ -229,11 +239,11 @@ void MainWindow::downsample()
 		return;
 	}
 	float sampleSize = textFieldInput.toFloat();
-	operation::downsample(Frame.at(t)->original, Frame.at(t)->cloud,sampleSize);
-	Frame.at(t)->renderSeq=-1;
-	Frame.at(t)->tri = false;
-	Frame.at(t)->binSeg=false;
-	Frame.at(t)->curv = false;
+	operation::downsample(Frame[t]->original, Frame[t]->cloud,sampleSize);
+	Frame[t]->renderSeq=-1;
+	Frame[t]->tri = false;
+	Frame[t]->binSeg=false;
+	Frame[t]->curv = false;
 	MainWindow::showCloud();
 
 }
@@ -242,17 +252,13 @@ void MainWindow::triangulation(void)
 {
 	if(t==-1)
 		return;
-	if(Frame.at(t)->cloud->size() != Frame.at(t)->normal->size())
-		operation::calcCurvature(Frame.at(t)->cloud,Frame.at(t)->normal);
-	operation::PCLtriangulation(Frame.at(t)->cloud,Frame.at(t)->normal,Frame.at(t)->triangulation);
-	Frame.at(t)->tri = true;
+	if(Frame[t]->cloud->size() != Frame[t]->normal->size())
+		operation::calcCurvature(Frame[t]->cloud,Frame[t]->normal);
+	operation::PCLtriangulation(Frame[t]->cloud,Frame[t]->normal,Frame[t]->triangulation);
+	Frame[t]->tri = true;
 	MainWindow::showCloud();
-	
-	ui->qvtkWidget->update();
+
 }
-
-
-
 
 //Gui State
 void MainWindow::updateGUIstate(bool)
@@ -268,20 +274,30 @@ void MainWindow::pSliderValueChanged (int value)
 {
 	if(t==-1)
 		return;
-	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, value, Frame.at(t)->ID);
+	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, value, Frame[t]->ID);
 	ui->qvtkWidget->update();
-	
 }
 
 void MainWindow::BinSeg()
 {
 	if(t==-1)
 		return;
-	if(!Frame.at(t)->curv)
+	if(!Frame[t]->curv)
 		computeCurvature();
-	Frame.at(t)->binCluster = Segmentation::binary(Frame.at(t)->cloud,Frame.at(t)->normal, Frame.at(t)->L,Frame.at(t)->S);
+	Frame[t]->binCluster = Segmentation::binary(Frame[t]->cloud,Frame[t]->normal, Frame[t]->L,Frame[t]->S);
 	//render Properties
-	Frame.at(t)->binSeg=true;
-	Frame.at(t)->renderSeq=-1;
+	Frame[t]->binSeg=true;
+	Frame[t]->renderSeq=-1;
 	showCloud();
+}
+
+void MainWindow::LeafSeg(void)
+{
+	if(t==-1)
+		return;
+	if(Frame[t]->L->size()==0)
+		return;
+	
+	Segmentation::multiLeaf(Frame[t]->L,Frame[t]->leafs,Frame[t]->LeafLabels);
+
 }

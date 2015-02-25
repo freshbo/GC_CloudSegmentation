@@ -193,6 +193,44 @@
          </layout>
         </item>
         <item>
+         <widget class="Line" name="line_5">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Multi-Leaf</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="MultiLeafButton">
+            <property name="text">
+             <string>Segmentation</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="ShowLeafs">
+            <property name="text">
+             <string>ShowLeafs</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -254,13 +292,6 @@
            </widget>
           </item>
          </layout>
-        </item>
-        <item>
-         <widget class="Line" name="line_5">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
         </item>
         <item>
          <layout class="QVBoxLayout" name="Triangulation_LAYOUT">
@@ -464,6 +495,9 @@
           <property name="text">
            <string>ShowOriginal</string>
           </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>
@@ -496,8 +530,16 @@
      <string>Edit</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuShow">
+    <property name="title">
+     <string>Show</string>
+    </property>
+    <addaction name="ShowLeafss"/>
+    <addaction name="actionStems"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuShow"/>
   </widget>
   <action name="actionLoad">
    <property name="text">
@@ -512,6 +554,19 @@
   <action name="actionClear_Clouds">
    <property name="text">
     <string>Clear Clouds</string>
+   </property>
+  </action>
+  <action name="ShowLeafss">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Leafs</string>
+   </property>
+  </action>
+  <action name="actionStems">
+   <property name="text">
+    <string>Stems</string>
    </property>
   </action>
  </widget>

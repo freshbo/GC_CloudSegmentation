@@ -6,12 +6,15 @@
 	{
 		original.reset(new PointCloudT());				//PointCloud to work with
 		
+		
 		ID = "";									//name in viewer
 		cloud.reset(new PointCloudT());				//PointCloud to work with
 		normal.reset(new PointCloudN());			//Normals
 		triangulation.reset(new pclMesh());
 		
 		L.reset(new PointCloudT());					//Leaf Points
+
+
 		S.reset(new PointCloudT());					//Stem Points
 
 		phi  =	0;									//phi Function |L| x |S|  Gives the number of Organs (leafs x stems)

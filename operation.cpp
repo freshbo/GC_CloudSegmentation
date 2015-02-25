@@ -46,6 +46,7 @@ namespace operation
 
         return;
     }
+	
 	void radiusOutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,float)
 	{
 		pcl::PointCloud<pcl::PointXYZ>::Ptr out;
@@ -61,6 +62,71 @@ namespace operation
 
 		pcl::copyPointCloud(*out,*cloud);
 	}
+
+	
+	void colorizeDefault(PointCloudT::Ptr cloud)
+	{
+		float maximum =cloud->points[0].z;
+		float minimum =cloud->points[0].z;
+		for (size_t i = 0; i<cloud->points.size(); i++){
+				maximum = max(maximum,cloud->points[i].z);
+			
+				minimum = min(minimum,cloud->points[i].z);
+		}
+
+		//Colorize All Points with Standard Color
+		for (size_t i = 0; i<cloud->points.size(); i++){
+
+			cloud->points[i].r = 0;
+			cloud->points[i].g = 70 + 100*((cloud->points[i].z-minimum)/(maximum-minimum));
+			cloud->points[i].b = 0;
+		}
+	}
+	
+	void colorizeCurvature(PointCloudN::Ptr normals, PointCloudT::Ptr wolke)
+	{
+		float curve_i;
+
+		//Coloring Points according to estimated curvature using bernsteinpolynomials
+		for (size_t i = 0; i<wolke->points.size(); i++)
+		{					
+		
+			curve_i =(normals->points[i].curvature- _ct)/C_max;
+			
+			
+			wolke->points[i].r= curve_i*255;
+			wolke->points[i].g= (1-curve_i)*255;
+			wolke->points[i].b= 128;
+		}
+		
+		return;
+	}
+	
+	void colorizeBinCluster(PointCloudT::Ptr cloud, vector<int> cluster)
+	{
+		if (cluster.size()!= cloud->size())
+			return;
+		float g = 61;
+		int e = 0;
+		for( int i= 0; i< cloud->size();i++)
+		{
+			e = cluster.at(i);
+			cloud->points[i].r =  (int) pow(g,e)%251;
+			cloud->points[i].g =  (int) pow(g,e)%251;
+			cloud->points[i].b =  (int) pow(g,e)%251;
+		}
+
+	}
+	
+	void linearizeCurvature(PointCloudN::Ptr normals)
+	{
+		for (size_t i = 0; i<normals->points.size(); i++)
+		{		
+			normals->points[i].curvature =log(max(normals->points.at(i).curvature,_ct));
+		}
+		return;
+	}
+
 
 	void calcCurvature(PointCloudT::Ptr cloud, PointCloudN::Ptr normals)
 	{
@@ -88,68 +154,7 @@ namespace operation
 			
 		return;
 	}
-
-	void linearizeCurvature(PointCloudN::Ptr normals)
-	{
-		for (size_t i = 0; i<normals->points.size(); i++)
-		{		
-			normals->points[i].curvature =log(max(normals->points.at(i).curvature,_ct));
-		}
-		return;
-	}
-
-	void colorizeDefault(PointCloudT::Ptr cloud)
-	{
-		float maximum =cloud->points[0].z;
-		float minimum =cloud->points[0].z;
-		for (size_t i = 0; i<cloud->points.size(); i++){
-				maximum = max(maximum,cloud->points[i].z);
-			
-				minimum = min(minimum,cloud->points[i].z);
-		}
-
-		//Colorize All Points with Standard Color
-		for (size_t i = 0; i<cloud->points.size(); i++){
-
-			cloud->points[i].r = 0;
-			cloud->points[i].g = 70 + 100*((cloud->points[i].z-minimum)/(maximum-minimum));
-			cloud->points[i].b = 0;
-		}
-	}
-	void colorizeCurvature(PointCloudN::Ptr normals, PointCloudT::Ptr wolke)
-	{
-		float curve_i;
-
-		//Coloring Points according to estimated curvature using bernsteinpolynomials
-		for (size_t i = 0; i<wolke->points.size(); i++)
-		{					
-		
-			curve_i =(normals->points[i].curvature- _ct)/C_max;
-			
-			
-			wolke->points[i].r= curve_i*255;
-			wolke->points[i].g= (1-curve_i)*255;
-			wolke->points[i].b= 128;
-		}
-		
-		return;
-	}
-	void colorizeBinCluster(PointCloudT::Ptr cloud, vector<int> cluster)
-	{
-		if (cluster.size()!= cloud->size())
-			return;
-		float g = 61;
-		int e = 0;
-		for( int i= 0; i< cloud->size();i++)
-		{
-			e = cluster.at(i);
-			cloud->points[i].r =  (int) pow(g,e)%251;
-			cloud->points[i].g =  (int) pow(g,e)%251;
-			cloud->points[i].b =  (int) pow(g,e)%251;
-		}
-
-	}
-
+	
 	void downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr input, pcl::PointCloud<pcl::PointXYZRGBA>::Ptr output, float sampleSize)
 	{
 		
@@ -165,8 +170,8 @@ namespace operation
 				
 		return;
 	}
-
-	void PCLtriangulation(PointCloudT::Ptr inputCloud,PointCloudN::Ptr normals, pclMesh::Ptr mesh)
+	
+	vector<int> PCLtriangulation(PointCloudT::Ptr inputCloud,PointCloudN::Ptr normals, pclMesh::Ptr mesh)
 	{
 		//INitialize Clouds
 		pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>());
@@ -197,40 +202,8 @@ namespace operation
 		// Additional vertex information
 		std::vector<int> parts = gp3.getPartIDs();
 		std::vector<int> states = gp3.getPointStates();
-		
-		for(int i =0;i<parts.size();i++)
-		{
-			if(mesh->cloud.data.at(i)== gp3.FREE)
-			{
-				inputCloud->at(i).r = 255;
-				inputCloud->at(i).g = 0;
-				inputCloud->at(i).b = 0;
-			}
-		}
-		
-		/*
-		for(int i=0;i<mesh->polygons.size();i++)
-		{
-			int k = mesh->polygons.at(i).vertices.size();
-			
-			for (int j=0; j<k;j++)
-			{	
-				int a = mesh->polygons.at(i).vertices.at(j);
-				
-				
-				{	inputCloud->at(a).r = 255;
-					inputCloud->at(a).g = 0;
-					inputCloud->at(a).b = 0;
-				}
-			}
-		}
-		
-		
-		
 
-		*/
-		
-		
+		return parts;
 	}
 
 	float dist(pcl::PointXYZRGBA p, PointCloudT::Ptr cloud)
@@ -326,6 +299,35 @@ namespace Segmentation
 	}	
 	void filterBinary(PointCloudT::Ptr leafs, PointCloudT::Ptr stems, vector<int>*labels)
 	{
+		//Not Yet Implemented
+	}
+
+	void multiLeaf(PointCloudT::Ptr L,vector<PointCloudT::Ptr> leafs, vector<int> labels)
+	{
+		/*
+		Find New Hypothesis by
+			-Sample from L
+			-Triangulating the leafs
+			-looking for large enough Connected Components in the mesh
+			-Getting 
+
+		*/
+
+/* NEEDED VARIABLES */
+
+	//Normals from L
+		PointCloudN::Ptr normal_L;
+		normal_L.reset(new PointCloudN);
+	//triangulation
+		vector<int> parts;
+		pclMesh::Ptr mesh;
+		mesh.reset(new pclMesh);
+
+
+		operation::downsample(L,L,0.2);
+		operation::calcCurvature(L,normal_L);
+		parts = operation::PCLtriangulation(L,normal_L,mesh);
 
 	}
+	
 }

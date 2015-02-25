@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed 25. Feb 16:39:42 2015
+** Created: Wed 25. Feb 18:39:40 2015
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -41,6 +41,8 @@ public:
     QAction *actionLoad;
     QAction *actionExit;
     QAction *actionClear_Clouds;
+    QAction *ShowLeafss;
+    QAction *actionStems;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QVBoxLayout *Operations_Line_LAYOUT;
@@ -62,13 +64,17 @@ public:
     QLabel *BinarySeg_LABEL;
     QPushButton *SegmentButton;
     QRadioButton *SegColorCode;
+    QFrame *line_5;
+    QVBoxLayout *verticalLayout_3;
+    QLabel *label_3;
+    QPushButton *MultiLeafButton;
+    QRadioButton *ShowLeafs;
     QSpacerItem *horizontalSpacer;
     QVBoxLayout *Sampling_LAYOUT;
     QLabel *Sampling_LABEL;
     QPushButton *sampleButton;
     QLineEdit *sampleNumberField;
     QPushButton *SampleSaveButton;
-    QFrame *line_5;
     QVBoxLayout *Triangulation_LAYOUT;
     QLabel *label_2;
     QPushButton *triangulationButton;
@@ -94,6 +100,7 @@ public:
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuEdit;
+    QMenu *menuShow;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -107,6 +114,11 @@ public:
         actionExit->setObjectName(QString::fromUtf8("actionExit"));
         actionClear_Clouds = new QAction(MainWindow);
         actionClear_Clouds->setObjectName(QString::fromUtf8("actionClear_Clouds"));
+        ShowLeafss = new QAction(MainWindow);
+        ShowLeafss->setObjectName(QString::fromUtf8("ShowLeafss"));
+        ShowLeafss->setCheckable(true);
+        actionStems = new QAction(MainWindow);
+        actionStems->setObjectName(QString::fromUtf8("actionStems"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -240,6 +252,36 @@ public:
 
         Operations_LAYOUT->addLayout(BinarySeg_LAYOUT);
 
+        line_5 = new QFrame(centralWidget);
+        line_5->setObjectName(QString::fromUtf8("line_5"));
+        line_5->setFrameShape(QFrame::VLine);
+        line_5->setFrameShadow(QFrame::Sunken);
+
+        Operations_LAYOUT->addWidget(line_5);
+
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        label_3 = new QLabel(centralWidget);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+        sizePolicy1.setHeightForWidth(label_3->sizePolicy().hasHeightForWidth());
+        label_3->setSizePolicy(sizePolicy1);
+
+        verticalLayout_3->addWidget(label_3);
+
+        MultiLeafButton = new QPushButton(centralWidget);
+        MultiLeafButton->setObjectName(QString::fromUtf8("MultiLeafButton"));
+
+        verticalLayout_3->addWidget(MultiLeafButton);
+
+        ShowLeafs = new QRadioButton(centralWidget);
+        ShowLeafs->setObjectName(QString::fromUtf8("ShowLeafs"));
+
+        verticalLayout_3->addWidget(ShowLeafs);
+
+
+        Operations_LAYOUT->addLayout(verticalLayout_3);
+
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         Operations_LAYOUT->addItem(horizontalSpacer);
@@ -274,13 +316,6 @@ public:
 
 
         Operations_LAYOUT->addLayout(Sampling_LAYOUT);
-
-        line_5 = new QFrame(centralWidget);
-        line_5->setObjectName(QString::fromUtf8("line_5"));
-        line_5->setFrameShape(QFrame::VLine);
-        line_5->setFrameShadow(QFrame::Sunken);
-
-        Operations_LAYOUT->addWidget(line_5);
 
         Triangulation_LAYOUT = new QVBoxLayout();
         Triangulation_LAYOUT->setSpacing(6);
@@ -440,6 +475,7 @@ public:
 
         ShowOriginal = new QRadioButton(centralWidget);
         ShowOriginal->setObjectName(QString::fromUtf8("ShowOriginal"));
+        ShowOriginal->setChecked(true);
 
         horizontalLayout_3->addWidget(ShowOriginal);
 
@@ -458,12 +494,17 @@ public:
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuEdit = new QMenu(menuBar);
         menuEdit->setObjectName(QString::fromUtf8("menuEdit"));
+        menuShow = new QMenu(menuBar);
+        menuShow->setObjectName(QString::fromUtf8("menuShow"));
         MainWindow->setMenuBar(menuBar);
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuEdit->menuAction());
+        menuBar->addAction(menuShow->menuAction());
         menuFile->addAction(actionLoad);
         menuFile->addAction(actionExit);
+        menuShow->addAction(ShowLeafss);
+        menuShow->addAction(actionStems);
 
         retranslateUi(MainWindow);
 
@@ -476,6 +517,8 @@ public:
         actionLoad->setText(QApplication::translate("MainWindow", "Load Frame", 0, QApplication::UnicodeUTF8));
         actionExit->setText(QApplication::translate("MainWindow", "Exit", 0, QApplication::UnicodeUTF8));
         actionClear_Clouds->setText(QApplication::translate("MainWindow", "Clear Clouds", 0, QApplication::UnicodeUTF8));
+        ShowLeafss->setText(QApplication::translate("MainWindow", "Leafs", 0, QApplication::UnicodeUTF8));
+        actionStems->setText(QApplication::translate("MainWindow", "Stems", 0, QApplication::UnicodeUTF8));
         General_LABEL->setText(QApplication::translate("MainWindow", "PointCloud", 0, QApplication::UnicodeUTF8));
         loadButton->setText(QApplication::translate("MainWindow", "Load", 0, QApplication::UnicodeUTF8));
         cleanButton->setText(QApplication::translate("MainWindow", "Clean", 0, QApplication::UnicodeUTF8));
@@ -488,6 +531,9 @@ public:
         BinarySeg_LABEL->setText(QApplication::translate("MainWindow", "Leaf- Stem", 0, QApplication::UnicodeUTF8));
         SegmentButton->setText(QApplication::translate("MainWindow", "Segmentation", 0, QApplication::UnicodeUTF8));
         SegColorCode->setText(QApplication::translate("MainWindow", "ShowColor", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("MainWindow", "Multi-Leaf", 0, QApplication::UnicodeUTF8));
+        MultiLeafButton->setText(QApplication::translate("MainWindow", "Segmentation", 0, QApplication::UnicodeUTF8));
+        ShowLeafs->setText(QApplication::translate("MainWindow", "ShowLeafs", 0, QApplication::UnicodeUTF8));
         Sampling_LABEL->setText(QApplication::translate("MainWindow", "DownSampling", 0, QApplication::UnicodeUTF8));
         sampleButton->setText(QApplication::translate("MainWindow", "Sample", 0, QApplication::UnicodeUTF8));
         sampleNumberField->setText(QString());
@@ -504,6 +550,7 @@ public:
         ShowOriginal->setText(QApplication::translate("MainWindow", "ShowOriginal", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
+        menuShow->setTitle(QApplication::translate("MainWindow", "Show", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

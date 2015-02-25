@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -52,33 +52,33 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-    <PropertyGroup>
-      <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\Workspace\01_Repositories\CloudSegmentation\Debug\</OutDir>
-      <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VisualizerWidget.dir\Debug\</IntDir>
-      <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VisualizerWidget</TargetName>
-      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
-      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\Workspace\01_Repositories\CloudSegmentation\Release\</OutDir>
-      <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VisualizerWidget.dir\Release\</IntDir>
-      <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VisualizerWidget</TargetName>
-      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
-      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
-      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\Workspace\01_Repositories\CloudSegmentation\MinSizeRel\</OutDir>
-      <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">VisualizerWidget.dir\MinSizeRel\</IntDir>
-      <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">VisualizerWidget</TargetName>
-      <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
-      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
-      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\Workspace\01_Repositories\CloudSegmentation\RelWithDebInfo\</OutDir>
-      <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">VisualizerWidget.dir\RelWithDebInfo\</IntDir>
-      <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">VisualizerWidget</TargetName>
-      <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
-      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
-      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
-    </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\Workspace\01_Repositories\CloudSegmentation\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VisualizerWidget.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VisualizerWidget</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\Workspace\01_Repositories\CloudSegmentation\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VisualizerWidget.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VisualizerWidget</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\Workspace\01_Repositories\CloudSegmentation\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">VisualizerWidget.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">VisualizerWidget</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\Workspace\01_Repositories\CloudSegmentation\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">VisualizerWidget.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">VisualizerWidget</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>L:\Programme\PCL 1.6.0\3rdParty\VTK\include\vtk-5.8;L:\Programme\PCL 1.6.0\include\pcl-1.6;L:\Programme\PCL 1.6.0\3rdParty\Eigen\include;L:\Programme\PCL 1.6.0\3rdParty\Boost\include;C:\Program Files\OpenNI\Include;L:\Programme\PCL 1.6.0\3rdParty\FLANN\include;L:\Programme\PCL 1.6.0\3rdParty\Qhull\include;C:\Qt\4.8.0\include;L:\Libraries\GeometricTools\WildMagic5\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -133,7 +133,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ImportLibrary>E:/Workspace/01_Repositories/CloudSegmentation/Debug/VisualizerWidget.lib</ImportLibrary>
       <ProgramDataBaseFile>E:/Workspace/01_Repositories/CloudSegmentation/Debug/VisualizerWidget.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
-      <Version></Version>
+      <Version>
+      </Version>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -153,7 +154,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;EIGEN_USE_NEW_STDVECTOR;EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET;BOOST_ALL_NO_LIB;FLANN_STATIC;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <DebugInformationFormat></DebugInformationFormat>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;EIGEN_USE_NEW_STDVECTOR;EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET;BOOST_ALL_NO_LIB;FLANN_STATIC;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -192,7 +194,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ImportLibrary>E:/Workspace/01_Repositories/CloudSegmentation/Release/VisualizerWidget.lib</ImportLibrary>
       <ProgramDataBaseFile>E:/Workspace/01_Repositories/CloudSegmentation/Release/VisualizerWidget.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
-      <Version></Version>
+      <Version>
+      </Version>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -212,7 +215,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;EIGEN_USE_NEW_STDVECTOR;EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET;BOOST_ALL_NO_LIB;FLANN_STATIC;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <DebugInformationFormat></DebugInformationFormat>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;EIGEN_USE_NEW_STDVECTOR;EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET;BOOST_ALL_NO_LIB;FLANN_STATIC;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -251,7 +255,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ImportLibrary>E:/Workspace/01_Repositories/CloudSegmentation/MinSizeRel/VisualizerWidget.lib</ImportLibrary>
       <ProgramDataBaseFile>E:/Workspace/01_Repositories/CloudSegmentation/MinSizeRel/VisualizerWidget.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
-      <Version></Version>
+      <Version>
+      </Version>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -310,7 +315,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ImportLibrary>E:/Workspace/01_Repositories/CloudSegmentation/RelWithDebInfo/VisualizerWidget.lib</ImportLibrary>
       <ProgramDataBaseFile>E:/Workspace/01_Repositories/CloudSegmentation/RelWithDebInfo/VisualizerWidget.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
-      <Version></Version>
+      <Version>
+      </Version>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -428,14 +434,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="graph.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="ui_mainwindow.h" />
-    <ClCompile Include="main.cpp"  />
-    <ClCompile Include="mainwindow.cpp"  />
-    <ClCompile Include="operation.cpp"  />
-    <ClCompile Include="PCFrame.cpp"  />
-    <ClCompile Include="graph.cpp"  />
-    <ClCompile Include="maxflow.cpp"  />
-    <ClCompile Include="global.cpp"  />
-    <ClCompile Include="VisualizerWidget_automoc.cpp"  />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="mainwindow.cpp" />
+    <ClCompile Include="operation.cpp" />
+    <ClCompile Include="PCFrame.cpp" />
+    <ClCompile Include="graph.cpp" />
+    <ClCompile Include="maxflow.cpp" />
+    <ClCompile Include="global.cpp" />
+    <ClCompile Include="VisualizerWidget_automoc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="E:/Workspace/01_Repositories/CloudSegmentation/ZERO_CHECK.vcxproj">
