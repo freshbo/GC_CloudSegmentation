@@ -10,30 +10,25 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	
 	/*	SLOTS	*/
 	//Load Point Clouds, Frames
-	connect (ui->actionLoad,SIGNAL(triggered()),this,SLOT(loadFrame())); //not yet implemented
-    connect (ui->loadButton,SIGNAL(released()),this,SLOT(loadPC()));
+	connect (ui->actionLoad,		SIGNAL(triggered()),this,			SLOT(loadFrame())); //not yet implemented
+    connect (ui->loadButton,		SIGNAL(released()),this,			SLOT(loadPC()));
 	//Controller: Which PointCloud can be seen?
-	connect (ui->FrameScrollBar, SIGNAL(valueChanged(int)), this, SLOT(frameScroll(int)));
-	//Outlier Removal
-	connect (ui->cleanButton,SIGNAL(released()),this,SLOT(statisticalOutliers()));
+	connect (ui->FrameScrollBar,	SIGNAL(valueChanged(int)), this,	SLOT(frameScroll(int)));
 	//Calculate Curvature, Segmentations, Downsampling,Triangulation
-	connect (ui->computeCurvature,SIGNAL(released()),this,SLOT(computeCurvature()));
-	connect (ui->SegmentButton,SIGNAL(released()),this,SLOT(BinSeg(void)));
-	connect (ui->MultiLeafButton,SIGNAL(released()),this,SLOT(LeafSeg(void)));
-	connect (ui->sampleButton,SIGNAL(released()),this,SLOT(downsample()));	
-	connect (ui->triangulationButton,SIGNAL(released()),this,SLOT(triangulation()));
-	
-	
-	
+	connect (ui->computeCurvature,	SIGNAL(released()),this,			SLOT(computeCurvature()));
+	connect (ui->SegmentButton,		SIGNAL(released()),this,			SLOT(BinSeg(void)));
+	connect (ui->MultiLeafButton,	SIGNAL(released()),this,			SLOT(LeafSeg(void)));
+	connect (ui->sampleButton,		SIGNAL(released()),this,			SLOT(downsample()));	
+	connect (ui->triangulationButton,SIGNAL(released()),this,			SLOT(triangulation()));
 	//Gui State (see orig. color, Curvature, Segmentations, PointSize in Viewer, etc)
-	connect (ui->ShowOriginal,SIGNAL(toggled(bool)),this,SLOT(updateGUIstate(bool)));
-	connect (ui->CurvColorCode,SIGNAL(toggled(bool)),this,SLOT(updateGUIstate(bool)));
-	connect (ui->SegColorCode,SIGNAL(toggled(bool)),this,SLOT(updateGUIstate(bool)));
-	connect (ui->horizontalSlider_p, SIGNAL (valueChanged (int)), this, SLOT (pSliderValueChanged (int)));
-	connect (ui->ShowMesh,SIGNAL(toggled(bool)),this,SLOT(showCloud()));	
-	connect (ui->ShowLeafs,SIGNAL(toggled(bool)),this,SLOT(showCloud()));	
+	connect (ui->ShowOriginal,		SIGNAL(toggled(bool)),this,			SLOT(updateGUIstate(bool)));
+	connect (ui->CurvColorCode,		SIGNAL(toggled(bool)),this,			SLOT(updateGUIstate(bool)));
+	connect (ui->SegColorCode,		SIGNAL(toggled(bool)),this,			SLOT(updateGUIstate(bool)));
+	connect (ui->horizontalSlider_p,SIGNAL (valueChanged (int)), this,	SLOT (pSliderValueChanged (int)));
+	connect (ui->ShowMesh,			SIGNAL(toggled(bool)),this,			SLOT(showCloud()));	
+	connect (ui->ShowLeafs,			SIGNAL(toggled(bool)),this,			SLOT(showCloud()));	
 	//Exit Program
-	connect (ui->actionExit,SIGNAL(triggered()),this,SLOT(close()));
+	connect (ui->actionExit,		SIGNAL(triggered()),this,			SLOT(close()));
 
 	//Set Up VTK window
 	viewer.reset(new pcl::visualization::PCLVisualizer("Viewer",false));
@@ -51,16 +46,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-/*
-FROM HERE ON FOLLOW THE SLOTS OF MAINWINDOW
-pSliderValueChanged()
-loadPC()
-clearClouds()
-computeNormals()
-showCurvature
-exit()
-
-*/
 void MainWindow::loadPC(void)
 {
 	boost::shared_ptr<hypothesis> H_t (new hypothesis);
@@ -109,6 +94,7 @@ void MainWindow::loadPC(void)
 	ui->PCNumberLABEL->setText("");
 	ui->InfoBox->setText("");
 	ui->CloudSizeLABEL->setText("");	
+	showCloud();
 
 }
 
@@ -126,102 +112,78 @@ void MainWindow::loadFrame(void)
 void MainWindow::frameScroll(int value)
 {
 	t = value;
+	g_renderSeq++;
 	showCloud();
 }
 
 void MainWindow::showCloud(void)
 {
-	if(t==-1)
+	if(t==-1) //No Cloud loaded
 		return;
-	if(ui->ShowLeafs->isChecked()&&Frame[t]->L->size()!=0){
-		viewer->removeAllPointClouds();
-		viewer->removePolygonMesh("mesh");
-		viewer->addPointCloud(Frame[t]->L,Frame[t]->ID);
-		ui->qvtkWidget->update();
+	
+	if(Frame[t]->renderSeq==g_renderSeq) //Nothing has changed in the GUI
 		return;
-	}
-	if (Frame[t]->renderSeq!=g_renderSeq){
-		Frame[t]->renderSeq = g_renderSeq;
-
-		if(ui->CurvColorCode->isChecked()&& Frame[t]->curv)
-			operation::colorizeCurvature(Frame[t]->normal,Frame[t]->cloud);
-		else if(ui->SegColorCode->isChecked() && Frame[t]->binSeg)
-			operation::colorizeBinCluster(Frame[t]->cloud,Frame[t]->binCluster);
-		else 
-			operation::colorizeDefault(Frame[t]->cloud);
-	}
-
+	//If something has changed, remove all clouds
 	viewer->removeAllPointClouds();
-	viewer->addPointCloud(Frame[t]->cloud,Frame[t]->ID);
-	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, ui->horizontalSlider_p->value(), Frame[t]->ID);
 	
+	if(ui->CurvColorCode->isChecked()&& Frame[t]->curv)
+	{
+		operation::colorizeCurvature(Frame[t]->normal,Frame[t]->cloud);
+		viewer->addPointCloud(Frame[t]->cloud,Frame[t]->ID);
+		viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, ui->horizontalSlider_p->value(), Frame[t]->ID);
+	}
 	
-	if(Frame[t]->tri && ui->ShowMesh->isChecked())
-		viewer->addPolygonMesh(*Frame[t]->triangulation, "mesh");
-	else
-		viewer->removePolygonMesh("mesh");
-	
-	
+	else if(ui->SegColorCode->isChecked() && Frame[t]->binSeg)
+	{
+		operation::colorizeBinCluster(Frame[t]->cloud,Frame[t]->binCluster);	
+		viewer->addPointCloud(Frame[t]->cloud,Frame[t]->ID);
+		viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, ui->horizontalSlider_p->value(), Frame[t]->ID);
+	}
 
+	else if(ui->ShowLeafs->isChecked()&&Frame[t]->leafs->size()!=0)
+	{
+		for(int i=0;i< Frame[t]->leafs->size();i++)
+			{
+				QString asd(i);
+				string tmp = asd.toStdString();
+				viewer->addPointCloud(Frame[t]->leafs->at(i),tmp);
+				viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, ui->horizontalSlider_p->value(), tmp);
+			}
+		operation::colorizeDefault(Frame[t]->S);
+		viewer->addPointCloud(Frame[t]->S,"Stems");
+		viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE,ui->horizontalSlider_p->value(), "Stems");
+	}
+	else
+	{
+		operation::colorizeDefault(Frame[t]->cloud);
+		viewer->addPointCloud(Frame[t]->cloud,Frame[t]->ID);
+		viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, ui->horizontalSlider_p->value(), Frame[t]->ID);
+	}
+	
 	ui->PCNumberLABEL->setText(QString::number(t));
 	ui->InfoBox->setText(QString::fromStdString(Frame[t]->ID));
-	ui->CloudSizeLABEL->setText(QString::number(Frame[t]->cloud->size()));	
-
+	ui->CloudSizeLABEL->setText(QString::number(Frame[t]->cloud->size()));
+	
+	//Update GUI
 	ui->qvtkWidget->update();
-}
-
-
-//Outlier
-void MainWindow::statisticalOutliers(void)
-{
-	if(t==-1)
-		return;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr tmpIN(new pcl::PointCloud<pcl::PointXYZ>());
-    pcl::copyPointCloud(*Frame[t]->cloud,*tmpIN);
-
-	int meanK = ui->cleanMeanK->text().toFloat();
-	int thresh = ui->cleanThresh->text().toFloat();
-
-    cout<<tmpIN->size()<<endl;
-	operation::statisticalOutlierRemoval(tmpIN,meanK,thresh);
-    cout<<tmpIN->size()<<endl;
-
-	Frame[t]->cloud->clear();
-    pcl::copyPointCloud(*tmpIN,*Frame[t]->cloud);
-    showCloud();
 	
-}
-void MainWindow::radiusOutliers(void)
-{
-	if(t==-1)
-		return;
-	pcl::PointCloud<pcl::PointXYZ>::Ptr tmpIN(new pcl::PointCloud<pcl::PointXYZ>());
-    pcl::copyPointCloud(*Frame[t]->cloud,*tmpIN);
+	ui->PCNumberLABEL->update();
+	ui->InfoBox->update();
+	ui->CloudSizeLABEL->update();
 	
-	float radius = -1;
-	radius = ui->cleanMeanK->text().toFloat();
-	if (radius<0)
-		cout<<"pleaseEnter a positive Radius"<<endl;
 
-    cout<<tmpIN->size()<<endl;
-	operation::radiusOutlierRemoval(tmpIN,radius);
-    cout<<tmpIN->size()<<endl;
-
-	Frame[t]->cloud->clear();
-    pcl::copyPointCloud(*tmpIN,*Frame[t]->cloud);
-	g_renderSeq++;
-	showCloud();
 }
 
 
-
-//Calculations
 void MainWindow::computeCurvature(void)
 {
 	if(t==-1)
 		return;
-	std::cout<<"compute Normals"<<std::endl;
+	if(ui->sampleNumberField->text()!="0")
+		operation::downsample(Frame[t]->original,Frame[t]->cloud,0.2);
+	cout<<"Calculate Curvature values...";
 	operation::calcCurvature(Frame[t]->cloud,Frame[t]->normal);
+	cout<<" DONE"<<endl;
 	//render Properties
 	Frame[t]->curv = true;
 	Frame[t]->renderSeq=-1;
@@ -235,7 +197,7 @@ void MainWindow::downsample()
 	QString textFieldInput = ui->sampleNumberField->text();
 	if(textFieldInput=="")
 	{	
-		cout<<"please Enter Valid float"<<endl;
+		cout<<"please Enter a valid float"<<endl;
 		return;
 	}
 	float sampleSize = textFieldInput.toFloat();
@@ -274,7 +236,7 @@ void MainWindow::pSliderValueChanged (int value)
 {
 	if(t==-1)
 		return;
-	viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, value, Frame[t]->ID);
+	showCloud();
 	ui->qvtkWidget->update();
 }
 
@@ -284,7 +246,10 @@ void MainWindow::BinSeg()
 		return;
 	if(!Frame[t]->curv)
 		computeCurvature();
+	cout<<"Calculate Binary Segmentation...";
 	Frame[t]->binCluster = Segmentation::binary(Frame[t]->cloud,Frame[t]->normal, Frame[t]->L,Frame[t]->S);
+	cout<<" DONE"<<endl;
+	
 	//render Properties
 	Frame[t]->binSeg=true;
 	Frame[t]->renderSeq=-1;
@@ -295,9 +260,17 @@ void MainWindow::LeafSeg(void)
 {
 	if(t==-1)
 		return;
-	if(Frame[t]->L->size()==0)
-		return;
-	
-	Segmentation::multiLeaf(Frame[t]->L,Frame[t]->leafs,Frame[t]->LeafLabels);
-
+	if(Frame[t]->binSeg==false){
+		BinSeg();
+		Frame[t]->binSeg=true;
+		Frame[t]->leafs->clear();
+	}
+	cout<<"Get Connected Components...";
+	Segmentation::getConnectedLeafs(Frame[t]->L,/*vectorCloud*/Frame[t]->leafs,Frame[t]->LeafLabels);
+	cout<<" DONE"<<" ";
+	cout<<"Found "<<Frame[t]->leafs->size()<<" mature Leafs"<<endl;
+	operation::colorizeLeafClusters(Frame[t]->leafs,Frame[t]->LeafLabels);
+	Frame[t]->renderSeq=-1;
+	showCloud();
 }
+

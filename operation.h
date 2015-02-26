@@ -7,6 +7,9 @@
 #include <list>
 #include <set>
 
+//include boost Shared Pointers
+#include <boost/shared_ptr.hpp>
+
 //Point Cloud Library
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -29,6 +32,7 @@
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 #include <boost/numeric/ublas/io.hpp>
 
+
 //visualization
 #include <pcl/visualization/pcl_visualizer.h>
 
@@ -42,39 +46,50 @@
 
 
 //PCL typedefs for Point Clouds
-typedef pcl::PointXYZRGBA					PointT;
-typedef pcl::PointCloud<PointT>				PointCloudT;
-typedef pcl::Normal							PointN;
-typedef pcl::PointCloud<PointN>				PointCloudN;
-typedef pcl::PointNormal					PointNP;
-typedef pcl::PointCloud<PointNP>			PointCloudNP;
-typedef pcl::PolygonMesh					pclMesh;
+typedef pcl::PointXYZRGBA							PointT;
+typedef pcl::PointCloud<PointT>						PointCloudT;
+typedef pcl::Normal									PointN;
+typedef pcl::PointCloud<PointN>						PointCloudN;
+typedef pcl::PointNormal							PointNP;
+typedef pcl::PointCloud<PointNP>					PointCloudNP;
+typedef pcl::PolygonMesh							pclMesh;
+typedef boost::shared_ptr<vector<PointCloudT::Ptr>>	vectorCloud;
 
 //Typedef MaxFlow Graph
 typedef Graph<float,float,float> GraphType;
 
 namespace operation
 {
-
+	//utility
 	string 				loadPLY(std::string path,PointCloudT::Ptr);
-    void                statisticalOutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,int,float);
-	void                radiusOutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,float);
-	void				calcCurvature(PointCloudT::Ptr cloud,PointCloudN::Ptr);
 	void				linearizeCurvature(PointCloudN::Ptr);
+	float				dist(pcl::PointXYZRGBA p, PointCloudT::Ptr cloud);
+	bool				compareClouds(PointCloudT::Ptr,PointCloudT::Ptr);
+	void                statisticalOutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,int,float);
+	void                radiusOutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,float);
+	//Calculation
+	void				calcCurvature(PointCloudT::Ptr cloud,PointCloudN::Ptr);
+	void				downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,float);	
+	vector<int>			PCLtriangulation(PointCloudT::Ptr,PointCloudN::Ptr,pclMesh::Ptr);
+	//Colorization
 	void				colorizeDefault(PointCloudT::Ptr);
 	void				colorizeCurvature(PointCloudN::Ptr curve, PointCloudT::Ptr cloud);
 	void				colorizeBinCluster(PointCloudT::Ptr cloud, vector<int> cluster);
-	void				downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,float);
+	void				colorizeLeafClusters(vectorCloud leafs, vector<int> labels);
+
 	
-	vector<int>			PCLtriangulation(PointCloudT::Ptr,PointCloudN::Ptr,pclMesh::Ptr);
-	float				dist(pcl::PointXYZRGBA p, PointCloudT::Ptr cloud);
 }
 
 namespace Segmentation
 {
+	//Binary
 	vector<int>			binary(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr L,PointCloudT::Ptr S);
-	void				filterBinary(PointCloudT::Ptr leafs, PointCloudT::Ptr stems, vector<int>*labels); //NOT YET IMPLEMENTED
-	void				multiLeaf(PointCloudT::Ptr,vector<PointCloudT::Ptr>,vector<int>);
+	void				filterBinary(PointCloudT::Ptr cloud, vector<int>*labels); //NOT YET IMPLEMENTED
+	
+	//MultiLeaf
+	void				getConnectedLeafs(PointCloudT::Ptr,vectorCloud,vector<int>);
+	void				getlargeComponents(PointCloudT::Ptr,vector<int>,int,vectorCloud);
 
+	//MultiStem
 }
 

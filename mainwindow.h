@@ -33,22 +33,19 @@ class MainWindow : public QMainWindow
 	public slots:
 
 		//Loading
-		void loadPC(void);
-		void loadFrame(void);
-		//filtering
-		void statisticalOutliers(void);
-		void radiusOutliers(void);
+		void		loadPC(void);
+		void		loadFrame(void);
 		//Computation
-		void downsample(void);
-		void computeCurvature(void);
-		void triangulation(void);
-		void BinSeg(void);
-		void LeafSeg(void);
+		void		downsample(void);
+		void		computeCurvature(void);
+		void		triangulation(void);
+		void		BinSeg(void);
+		void		LeafSeg(void);
 		//Gui & Viz
-		void frameScroll(int value);
-		void updateGUIstate(bool);
-		void pSliderValueChanged (int value);
-		void showCloud(void);
+		void		frameScroll(int value);
+		void		updateGUIstate(bool);
+		void		pSliderValueChanged (int value);
+		void		showCloud(void);
 		
 		
 

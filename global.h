@@ -1,6 +1,9 @@
 #pragma once
 
 #include <math.h>
+#include <vector>
+
+using namespace std;
 
 	extern float _ct ;
 	extern float C_max;

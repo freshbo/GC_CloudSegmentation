@@ -13,7 +13,7 @@
 		triangulation.reset(new pclMesh());
 		
 		L.reset(new PointCloudT());					//Leaf Points
-
+		leafs.reset(new vector<PointCloudT::Ptr>);
 
 		S.reset(new PointCloudT());					//Stem Points
 

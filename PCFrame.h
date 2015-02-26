@@ -19,11 +19,11 @@ struct hypothesis
 	/*  Binary Clustering  */
 	vector<int> binCluster;		//represents as Integer the Cluster each Point of cloud belongs to
 	PointCloudT::Ptr L;			//binary segmented cloud: All leaf points
-	vector<PointCloudT::Ptr> leafs; //Vector containing each leaf as PointCloudT
+	vectorCloud leafs; //Vector containing each leaf as PointCloudT
 	vector<int>LeafLabels;		//represents the label number of each leaf in vector leaf
 
 	PointCloudT::Ptr S;			//binary segmented cloud: All Stem Points
-	vector<PointCloudT::Ptr> stems; //Vector containing each stem as PointCloudT
+	vectorCloud stems; //Vector containing each stem as PointCloudT
 	vector<int>StemLabels;		//represents the label number of each stem in vector stem
 
 	

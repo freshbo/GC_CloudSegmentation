@@ -4,7 +4,7 @@
 namespace operation
 {
 
-
+	//Utility:
 	string loadPLY(std::string path, PointCloudT::Ptr cloud)
 	{	
 		//This block extracts the Name of the File. 
@@ -30,7 +30,32 @@ namespace operation
 		//std::cout<<"loadPLY: "<<cloud->points.size()<<std::endl;
 		return ID;		
 	}
-	
+	void linearizeCurvature(PointCloudN::Ptr normals)
+	{
+		for (size_t i = 0; i<normals->points.size(); i++)
+		{		
+			normals->points[i].curvature =log(max(normals->points.at(i).curvature,_ct));
+		}
+		return;
+	}
+	float dist(pcl::PointXYZRGBA p, PointCloudT::Ptr cloud)
+	{
+		if(cloud->size()==0)
+			return numeric_limits<float>::infinity(); //Return Infinity If cloud is Empty
+		int K = 1;
+		pcl::KdTreeFLANN<pcl::PointXYZRGBA> kdTree;
+		vector <int> pointIdx;
+		vector <float> sqDist;
+		kdTree.setInputCloud(cloud);
+		kdTree.nearestKSearch(p, K, pointIdx,sqDist);
+		if(sqDist.size()<1)
+			return -1; //Return -1 if no nearest neighbor was found
+		return sqrt(sqDist.at(0)); 
+	}
+	bool compareClouds(PointCloudT::Ptr a,PointCloudT::Ptr b)
+	{
+		return a->size()>b->size();
+	}
 	void statisticalOutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,int meanK,float thresh)
     {
 		pcl::PointCloud<pcl::PointXYZ>::Ptr tmpOUT(new pcl::PointCloud<pcl::PointXYZ>());
@@ -46,7 +71,6 @@ namespace operation
 
         return;
     }
-	
 	void radiusOutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,float)
 	{
 		pcl::PointCloud<pcl::PointXYZ>::Ptr out;
@@ -63,74 +87,10 @@ namespace operation
 		pcl::copyPointCloud(*out,*cloud);
 	}
 
-	
-	void colorizeDefault(PointCloudT::Ptr cloud)
-	{
-		float maximum =cloud->points[0].z;
-		float minimum =cloud->points[0].z;
-		for (size_t i = 0; i<cloud->points.size(); i++){
-				maximum = max(maximum,cloud->points[i].z);
-			
-				minimum = min(minimum,cloud->points[i].z);
-		}
-
-		//Colorize All Points with Standard Color
-		for (size_t i = 0; i<cloud->points.size(); i++){
-
-			cloud->points[i].r = 0;
-			cloud->points[i].g = 70 + 100*((cloud->points[i].z-minimum)/(maximum-minimum));
-			cloud->points[i].b = 0;
-		}
-	}
-	
-	void colorizeCurvature(PointCloudN::Ptr normals, PointCloudT::Ptr wolke)
-	{
-		float curve_i;
-
-		//Coloring Points according to estimated curvature using bernsteinpolynomials
-		for (size_t i = 0; i<wolke->points.size(); i++)
-		{					
-		
-			curve_i =(normals->points[i].curvature- _ct)/C_max;
-			
-			
-			wolke->points[i].r= curve_i*255;
-			wolke->points[i].g= (1-curve_i)*255;
-			wolke->points[i].b= 128;
-		}
-		
-		return;
-	}
-	
-	void colorizeBinCluster(PointCloudT::Ptr cloud, vector<int> cluster)
-	{
-		if (cluster.size()!= cloud->size())
-			return;
-		float g = 61;
-		int e = 0;
-		for( int i= 0; i< cloud->size();i++)
-		{
-			e = cluster.at(i);
-			cloud->points[i].r =  (int) pow(g,e)%251;
-			cloud->points[i].g =  (int) pow(g,e)%251;
-			cloud->points[i].b =  (int) pow(g,e)%251;
-		}
-
-	}
-	
-	void linearizeCurvature(PointCloudN::Ptr normals)
-	{
-		for (size_t i = 0; i<normals->points.size(); i++)
-		{		
-			normals->points[i].curvature =log(max(normals->points.at(i).curvature,_ct));
-		}
-		return;
-	}
-
-
+	//Calculation
 	void calcCurvature(PointCloudT::Ptr cloud, PointCloudN::Ptr normals)
 	{
-		std::cout<<"Start Normal Calculation"<<std::endl;
+		
 		// Create the normal estimation class, and pass the input dataset to it
 		
 		//pcl::NormalEstimation<PointT, pcl::Normal> ne; //One Core
@@ -145,19 +105,22 @@ namespace operation
 		ne.setSearchMethod (tree);
 
 		// Use all neighbors in a sphere of radius 3cm
-		ne.setRadiusSearch (0.5);
+		ne.setRadiusSearch (1);
 		//ne.setKSearch(300);
 		
 		// Compute the features
 		ne.compute (*normals);
-		std::cout<<"Finish Normal Calculation"<<std::endl;
+		
 			
 		return;
 	}
-	
 	void downsample(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr input, pcl::PointCloud<pcl::PointXYZRGBA>::Ptr output, float sampleSize)
 	{
-		
+		if(sampleSize == 0){
+			pcl::copyPointCloud(*input,*output);
+			return;
+		}
+
 		PointCloudT::Ptr tmp;
 		tmp.reset(new PointCloudT);
 		
@@ -170,7 +133,6 @@ namespace operation
 				
 		return;
 	}
-	
 	vector<int> PCLtriangulation(PointCloudT::Ptr inputCloud,PointCloudN::Ptr normals, pclMesh::Ptr mesh)
 	{
 		//INitialize Clouds
@@ -206,26 +168,108 @@ namespace operation
 		return parts;
 	}
 
-	float dist(pcl::PointXYZRGBA p, PointCloudT::Ptr cloud)
+	//Colorization
+	void colorizeDefault(PointCloudT::Ptr cloud)
 	{
-		if(cloud->size()==0)
-			return numeric_limits<float>::infinity(); //Return Infinity If cloud is Empty
-		int K = 1;
-		pcl::KdTreeFLANN<pcl::PointXYZRGBA> kdTree;
-		vector <int> pointIdx;
-		vector <float> sqDist;
-		kdTree.setInputCloud(cloud);
-		kdTree.nearestKSearch(p, K, pointIdx,sqDist);
-		if(sqDist.size()<1)
-			return -1; //Return -1 if no nearest neighbor was found
-		return sqrt(sqDist.at(0)); 
+		float maximum =cloud->points[0].z;
+		float minimum =cloud->points[0].z;
+		for (size_t i = 0; i<cloud->points.size(); i++){
+				maximum = max(maximum,cloud->points[i].z);
+				minimum = min(minimum,cloud->points[i].z);
+		}
+
+		//Colorize All Points with Standard Color
+		for (size_t i = 0; i<cloud->points.size(); i++){
+			cloud->points[i].r = 0;
+			cloud->points[i].g = 70 + 100*((cloud->points[i].z-minimum)/(maximum-minimum));
+			cloud->points[i].b = 0;
+		}
 	}
+	void colorizeCurvature(PointCloudN::Ptr normals, PointCloudT::Ptr wolke)
+	{
+		float curve_i;
+
+		//Coloring Points according to estimated curvature using bernsteinpolynomials
+		for (size_t i = 0; i<wolke->points.size(); i++)
+		{					
+		
+			curve_i =(normals->points[i].curvature- _ct)/C_max;
+			
+			
+			wolke->points[i].r= curve_i*255;
+			wolke->points[i].g= (1-curve_i)*255;
+			wolke->points[i].b= 128;
+		}
+		
+		return;
+	}
+	void colorizeBinCluster(PointCloudT::Ptr cloud, vector<int> cluster)
+	{
+		if (cluster.size()!= cloud->size())
+			return;
+		float g = 128;
+		int e = 0;
+		for( int i= 0; i< cloud->size();i++)
+		{
+			e = cluster.at(i);
+			cloud->points[i].r =  (int) pow(g,e)%251;
+			cloud->points[i].g =  (int) pow(g,e)%251;
+			cloud->points[i].b =  (int) pow(g,e)%251;
+		}
+
+	}
+	void colorizeLeafClusters(vectorCloud leafs, vector<int> labels)
+	{
+		//Apply colors to Clouds with certain label
+		vector<int>c;
+		
+//COLOR 1		
+		c.push_back(185);
+		c.push_back(20);
+		c.push_back(78);
+//COLOR 2
+		c.push_back(185);
+		c.push_back(188);
+		c.push_back(78);
+//COLOR 3
+		c.push_back(185);
+		c.push_back(188);
+		c.push_back(201);
+//COLOR 4
+		c.push_back(185);
+		c.push_back(69);
+		c.push_back(201);
+//COLOR 5
+		c.push_back(37);
+		c.push_back(69);
+		c.push_back(201);
+//COLOR 6
+		c.push_back(235);
+		c.push_back(227);
+		c.push_back(44);
+//COLOR 7
+		c.push_back(37);
+		c.push_back(69);
+		c.push_back(201);
+		
+		for(int i=0;i<leafs->size();i++)
+		{
+			for(int j=0;j<leafs->at(i)->size();j++)
+			{
+				leafs->at(i)->points[j].r = c[(i%7)*3+0];
+				leafs->at(i)->points[j].g = c[(i%7)*3+1];
+				leafs->at(i)->points[j].b = c[(i%7)*3+2];
+			}
+		}
+	}
+	
 
 }//end namespace operation
 
 namespace Segmentation
 {
-	vector<int> binary(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr Leafs ,PointCloudT::Ptr Stems)
+	//Binary
+	vector<int> binary(PointCloudT::Ptr cloud, PointCloudN::Ptr normals,PointCloudT::Ptr L ,PointCloudT::Ptr S)
 	{
 
 		int K = 10;
@@ -265,69 +309,148 @@ namespace Segmentation
 
 		}
 		
+
 		float flow = g -> maxflow();
-		int leafPointCount =0;
-		int stemPointCount =0;
 		vector<int> binCluster;
 		
-		Leafs->clear();
-		Stems->clear();
+		//Copy LeafPoints and Stem points into its respective Cloud L and S
+		L->clear();
+		S->clear();
 		binCluster.clear();
-
-		for(int i=0; i< cloud->size();i++){
-
-			if(g->what_segment(i) == GraphType::SOURCE){
-				Leafs->push_back(cloud->points[i]);
-				Leafs->points[leafPointCount].r = 0;
-				Leafs->points[leafPointCount].g = 0;
-				Leafs->points[leafPointCount].b = 160;
-				binCluster.push_back(2);
-				leafPointCount++;
-			}
-			else{
-				Stems->push_back(cloud->points[i]);
-				Stems->points[stemPointCount].r = 120;
-				Stems->points[stemPointCount].g = 120;
-				Stems->points[stemPointCount].b = 0;
+		for(int i=0; i< cloud->size();i++)
+			if(g->what_segment(i) == GraphType::SOURCE)
 				binCluster.push_back(1);
-				stemPointCount++;
-			}
-		}
-
+			else
+				binCluster.push_back(0);
+			
+		
 		delete g;
+		filterBinary(cloud,&binCluster);
+		for(int i=0;i<cloud->size();i++)
+		{
+			if(binCluster.at(i)==1)
+				L->push_back(cloud->points[i]);
+			else
+				S->push_back(cloud->points[i]);
+		}
 		return binCluster;
 	}	
-	void filterBinary(PointCloudT::Ptr leafs, PointCloudT::Ptr stems, vector<int>*labels)
+	void filterBinary(PointCloudT::Ptr cloud, vector<int>*labels)
 	{
-		//Not Yet Implemented
-	}
+		pcl::KdTreeFLANN<pcl::PointXYZRGBA> kdtree; 
+		kdtree.setInputCloud (cloud);
+		
+		vector<int>tmp(labels->size());
+		copy(labels->begin(),labels->end(),tmp.begin());
+		//Save list of Indicees within cloud
+		vector<int> pointIdxNKNSearch;
+		vector<float> pointNKNsquaredDistance;
+		int K = 100;
+		int labelI;
+		int labelJ;
+		int balance; /*is a measure of how many labels are LEAFS and how many are Stems. 
+			The innermost loop below will compute +1 if labelJ == LabelI and
+										  compute -1 if labelJ != LabelI
+			if after that loop balance / K is <10% vector<int>labels will be switched at pos i
+		*/
+		for(int i=0;i<cloud->size();i++)
+		{	
+			balance = 0;
+			//Search KNN for point i
+			pointIdxNKNSearch.clear();
+			kdtree.nearestKSearch(cloud->points[i],K,pointIdxNKNSearch,pointNKNsquaredDistance);
+			//Walk through KNN
+			labelI = tmp.at(i);
 
-	void multiLeaf(PointCloudT::Ptr L,vector<PointCloudT::Ptr> leafs, vector<int> labels)
+			for(int k = 0; k < pointIdxNKNSearch.size(); k++)
+			{	
+				int j = pointIdxNKNSearch[k];
+				labelJ = tmp.at(j);
+				if(labelJ==labelI)
+					balance++;
+				else
+					balance--;
+			}
+			
+			if(balance<30){
+				labels->at(i)= abs(labels->at(i)-1);
+			}
+
+		}
+
+	}
+	//Multi Leaf
+	void getConnectedLeafs(PointCloudT::Ptr L ,vectorCloud leafs, vector<int> labels)
 	{
 		/*
 		Find New Hypothesis by
 			-Sample from L
-			-Triangulating the leafs
-			-looking for large enough Connected Components in the mesh
-			-Getting 
-
+			-Triangulating the sampled Cloud
+			-get large enough Connected Components
+			-export points from L into correctly respective PointCloud
 		*/
 
-/* NEEDED VARIABLES */
+		/* init NEEDED VARIABLES */
 
-	//Normals from L
+		//Normals from L
 		PointCloudN::Ptr normal_L;
 		normal_L.reset(new PointCloudN);
-	//triangulation
+		//triangulation
 		vector<int> parts;
 		pclMesh::Ptr mesh;
 		mesh.reset(new pclMesh);
 
+		//function Calls
+		operation::downsample(L,L,0.1); //sample L high resolution is not in this step
+		operation::calcCurvature(L,normal_L); //Normal estimation on sampled L 
+		parts = operation::PCLtriangulation(L,normal_L,mesh); //Triangulate L
+		
+		int min = 1000; //Min number needed to be recognised as Leaf
+		getlargeComponents(/*Cloud*/L,/*ConnectedComponentIndex*/parts,/*MinNumber to be recognised*/min,/*return*/leafs);
+		for(int i=0;i<leafs->size();i++)
+		{
+			labels.push_back(i);
+		}
+		
 
-		operation::downsample(L,L,0.2);
-		operation::calcCurvature(L,normal_L);
-		parts = operation::PCLtriangulation(L,normal_L,mesh);
+	}
+	void getlargeComponents(PointCloudT::Ptr L,vector<int> parts,int min ,/*return*/vectorCloud leafs)
+	{
+		/*
+			Get Connected Components with more than at least >min< vertecies:
+				-Create Set s from vector<int>parts
+				-init leafs (size = s.size())
+				-for each Point in L
+					-set it into the parts[i]th PointCloud at leafs
+				throw away all clouds where cloud.size()<min
+				return
+		*/
+		set<int> s(parts.begin(),parts.end()); //creates a Set of the 
+		
+		for(int i=0;i<s.size();i++)
+		{
+			PointCloudT::Ptr tmp_Ptr;
+			tmp_Ptr.reset(new PointCloudT);
+			leafs->push_back(tmp_Ptr);
+		}
+
+		for(int i=0;i<parts.size();i++)
+		{
+			PointT p = L->points[i];
+			leafs->at(parts[i])->push_back(p);
+
+		}
+		std::sort(leafs->begin(),leafs->end(),operation::compareClouds);
+		
+		vector<PointCloudT::Ptr>::iterator it;
+
+		for(it= leafs->begin(); it!=leafs->end();it++)
+		{
+			if(it->get()->size()<min)
+				break;
+		}
+		leafs->erase(it,leafs->end());
 
 	}
 	
-}
+}//end namespace Segmentation

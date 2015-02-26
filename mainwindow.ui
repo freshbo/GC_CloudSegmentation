@@ -29,6 +29,12 @@
          <layout class="QVBoxLayout" name="General_LAYOUT">
           <item>
            <widget class="QLabel" name="General_LABEL">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>PointCloud</string>
             </property>
@@ -42,50 +48,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="cleanButton">
+           <widget class="QRadioButton" name="ShowOriginal">
             <property name="text">
-             <string>Clean</string>
+             <string>ShowOriginal</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="Input_LAYOUT">
-            <item>
-             <widget class="QLineEdit" name="cleanMeanK">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="inputMask">
-               <string/>
-              </property>
-              <property name="echoMode">
-               <enum>QLineEdit::Normal</enum>
-              </property>
-              <property name="cursorPosition">
-               <number>0</number>
-              </property>
-              <property name="placeholderText">
-               <string>meanK</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="cleanThresh">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="placeholderText">
-               <string>threshold</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
           </item>
          </layout>
         </item>
@@ -490,16 +460,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QRadioButton" name="ShowOriginal">
-          <property name="text">
-           <string>ShowOriginal</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
      </layout>
@@ -530,16 +490,8 @@
      <string>Edit</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuShow">
-    <property name="title">
-     <string>Show</string>
-    </property>
-    <addaction name="ShowLeafss"/>
-    <addaction name="actionStems"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuShow"/>
   </widget>
   <action name="actionLoad">
    <property name="text">
