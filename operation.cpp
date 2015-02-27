@@ -252,10 +252,10 @@ namespace operation
 		c.push_back(69);
 		c.push_back(201);
 		
-		for(int i=0;i<leafs->size();i++)
-		{
+		for(int i=0;i<labels.size();i++){
 			for(int j=0;j<leafs->at(i)->size();j++)
-			{
+		{
+		
 				leafs->at(i)->points[j].r = c[(i%7)*3+0];
 				leafs->at(i)->points[j].g = c[(i%7)*3+1];
 				leafs->at(i)->points[j].b = c[(i%7)*3+2];
@@ -380,7 +380,7 @@ namespace Segmentation
 
 	}
 	//Multi Leaf
-	void getConnectedLeafs(PointCloudT::Ptr L ,vectorCloud leafs, vector<int> labels)
+	void getConnectedLeafs(PointCloudT::Ptr L ,vectorCloud leafs, vector<int> *labels)
 	{
 		/*
 		Find New Hypothesis by
@@ -390,9 +390,7 @@ namespace Segmentation
 			-export points from L into correctly respective PointCloud
 		*/
 
-		/* init NEEDED VARIABLES */
-
-		//Normals from L
+		//Normals from L for triangulation
 		PointCloudN::Ptr normal_L;
 		normal_L.reset(new PointCloudN);
 		//triangulation
@@ -409,7 +407,7 @@ namespace Segmentation
 		getlargeComponents(/*Cloud*/L,/*ConnectedComponentIndex*/parts,/*MinNumber to be recognised*/min,/*return*/leafs);
 		for(int i=0;i<leafs->size();i++)
 		{
-			labels.push_back(i);
+			labels->push_back(i);
 		}
 		
 
@@ -425,7 +423,7 @@ namespace Segmentation
 				throw away all clouds where cloud.size()<min
 				return
 		*/
-		set<int> s(parts.begin(),parts.end()); //creates a Set of the 
+		set<int> s(parts.begin(),parts.end()); //creates a Set of the ComponentIDs
 		
 		for(int i=0;i<s.size();i++)
 		{
@@ -453,4 +451,76 @@ namespace Segmentation
 
 	}
 	
+	void multiOrganSegmentation(PointCloudT::Ptr L, vectorCloud O_t,  vector<int>*labelsO,/*Output:*/vectorCloud leafs, vector<int>* LeafLabels )
+	{
+		/*
+		Solve consisten Labeling via alpha-Expansion:
+		-O_cur = current Organs (either leafs, or Stems)
+		-O_neigh = Organs from a neighboring Frame (Forward or Backward)
+		-labels_cur = current labels of the organs (this is going to be the 
+		*/
+		operation::downsample(L,L,0.5);
+		GCoptimizationGeneralGraph *gc = new GCoptimizationGeneralGraph(L->size(),labelsO->size());
+		
+		pclMesh::Ptr mesh(new pclMesh); 
+		PointCloudN::Ptr normal(new PointCloudN);
+		operation::calcCurvature(L,normal);
+		operation::PCLtriangulation(L,normal,mesh);
+
+		//SET T-LINKS
+		cout<<"set T-Links for "<< L->points.size()<<" "<<endl;
+		for(int i=0;i<L->points.size();i++){						//all points
+			for(int l=0;l<labelsO->size();l++)			//all labels
+			{			
+				pcl::PointXYZRGBA p = L->points[i];
+				double d = operation::dist(p, O_t->at(l));
+				gc->setDataCost(i,l,d);
+			}
+		}
+		
+		//SET N-LINKS
+		cout<<"set N-Links for "<<mesh->polygons.size()<<" faces"<<endl;
+		for(int i=0; i<mesh->polygons.size();i++){
+			int a = mesh->polygons[i].vertices.at(0);
+			for(int j=1; j<mesh->polygons[i].vertices.size();j++)
+			{
+				int b = mesh->polygons[i].vertices.at(j);
+				gc->setNeighbors(a,b,1);
+				gc->setNeighbors(b,a,1);
+			}
+
+		}
+		//Set Smoothnes Cost
+		for ( int l1 = 0; l1 < labelsO->size(); l1++ ){
+				for (int l2 = 0; l2 < labelsO->size(); l2++ ){
+					int cost = l1==l2 ? 0:1;
+					gc->setSmoothCost(l1,l2,cost);
+
+			}
+		}
+		cout<<"start Alpha expansion... "<<endl;
+		printf("\nBefore optimization energy is %d",gc->compute_energy());
+		gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
+		printf("\nAfter optimization energy is %d",gc->compute_energy());
+		cout<<"DONE"<<endl;
+
+
+		
+		LeafLabels->clear();
+		for(int i=0;i<labelsO->size();i++){
+			PointCloudT::Ptr tmp_Ptr;
+			tmp_Ptr.reset(new PointCloudT);
+			LeafLabels->push_back(labelsO->at(i));
+			leafs->push_back(tmp_Ptr);
+		}
+		for(int i=0;i<L->size();i++)
+		{
+			int label = gc->whatLabel(i);
+			leafs->at(label)->push_back(L->points[i]);
+		}
+		
+		delete gc;
+		return;
+
+	}
 }//end namespace Segmentation

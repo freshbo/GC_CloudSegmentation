@@ -58,16 +58,19 @@ void MainWindow::loadPC(void)
 	//determine File name
 	int slash = path.find_last_of('/');
 	int dot   = path.find_last_of(".");
-	cout<<slash<<"  "<<dot<<endl;
 	std::string name = path.substr(slash+1,dot-slash-1);
+	
+	string endung = path.substr(dot+1,-1);
+	if(endung!="ply")
+		return;
 	cout<<"load "<<name<<endl;
 	//set File name as File name in hypothesis.
 	H_t->ID = name;
 			
 	//load file into the PCL
-	string ID = operation::loadPLY(path,H_t->cloud); //load PLY into cloud;
+	string ID = operation::loadPLY(path,H_t->original); //load PLY into cloud;
 	//default (green) color:
-	pcl::copyPointCloud(*H_t->cloud, *H_t->original);
+	pcl::copyPointCloud(*H_t->original, *H_t->cloud);
 	operation::colorizeDefault(H_t->cloud);
 	
 	//clear viewport
@@ -76,7 +79,8 @@ void MainWindow::loadPC(void)
 	viewer->addPointCloud(H_t->cloud, H_t->ID);
 	
 	//update
-	viewer->resetCamera();
+	if(t==-1)
+		viewer->resetCamera();
 	ui->qvtkWidget->update (); //update viewer
 	
 	//push added to the vector
@@ -84,8 +88,6 @@ void MainWindow::loadPC(void)
 	
 	t = Frame.size()-1;
 	
-	
-
 	//set correct slider properties
 	ui->FrameScrollBar->setMaximum(t);
 	ui->FrameScrollBar->setValue(t);
@@ -265,12 +267,22 @@ void MainWindow::LeafSeg(void)
 		Frame[t]->binSeg=true;
 		Frame[t]->leafs->clear();
 	}
-	cout<<"Get Connected Components...";
-	Segmentation::getConnectedLeafs(Frame[t]->L,/*vectorCloud*/Frame[t]->leafs,Frame[t]->LeafLabels);
-	cout<<" DONE"<<" ";
-	cout<<"Found "<<Frame[t]->leafs->size()<<" mature Leafs"<<endl;
-	operation::colorizeLeafClusters(Frame[t]->leafs,Frame[t]->LeafLabels);
-	Frame[t]->renderSeq=-1;
+	if(t==0)
+	{
+		cout<<"Get Connected Components...";
+		Segmentation::getConnectedLeafs(Frame[t]->L,/*vectorCloud*/Frame[t]->leafs,&Frame[t]->LeafLabels);
+		cout<<" DONE"<<" ";
+		cout<<"Found "<<Frame[t]->LeafLabels.size()<<" mature Leafs"<<endl;
+		
+		operation::colorizeLeafClusters(Frame[t]->leafs,Frame[t]->LeafLabels);
+		Frame[t]->renderSeq=-1;
+		showCloud();
+		return;
+	}else
+		Segmentation::multiOrganSegmentation(Frame[t]->L,Frame[t-1]->leafs,&Frame[t-1]->LeafLabels,/*Output:*/Frame[t]->leafs,&Frame[t]->LeafLabels);
+	operation::colorizeLeafClusters(Frame[t]->leafs,Frame[t]->LeafLabels);	
 	showCloud();
+				
+	
 }
 

@@ -26,6 +26,13 @@
       <item>
        <layout class="QHBoxLayout" name="Operations_LAYOUT">
         <item>
+         <widget class="Line" name="line_9">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
          <layout class="QVBoxLayout" name="General_LAYOUT">
           <item>
            <widget class="QLabel" name="General_LABEL">
@@ -50,7 +57,7 @@
           <item>
            <widget class="QRadioButton" name="ShowOriginal">
             <property name="text">
-             <string>ShowOriginal</string>
+             <string>Original</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -118,7 +125,7 @@
           <item>
            <widget class="QRadioButton" name="CurvColorCode">
             <property name="text">
-             <string>ShowColor</string>
+             <string>Curvature</string>
             </property>
            </widget>
           </item>
@@ -156,7 +163,7 @@
           <item>
            <widget class="QRadioButton" name="SegColorCode">
             <property name="text">
-             <string>ShowColor</string>
+             <string>Binary Seg.</string>
             </property>
            </widget>
           </item>
@@ -194,11 +201,18 @@
           <item>
            <widget class="QRadioButton" name="ShowLeafs">
             <property name="text">
-             <string>ShowLeafs</string>
+             <string>Multi-Leaf</string>
             </property>
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="Line" name="line_8">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
         </item>
         <item>
          <spacer name="horizontalSpacer">

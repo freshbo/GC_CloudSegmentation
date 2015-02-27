@@ -22,6 +22,12 @@
     <ClCompile Include="global.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GCoptimization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkedBlockList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="VisualizerWidget_automoc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,6 +51,15 @@
     <ClInclude Include="global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="energy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GCoptimization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedBlockList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ui_mainwindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -55,10 +70,10 @@
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{AF24D507-237D-46E9-9C77-13169C60006B}</UniqueIdentifier>
+      <UniqueIdentifier>{EEE72CC9-C182-43B6-B521-42201245D7CA}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{F444E18D-57A4-4A08-B3B7-9F745F130972}</UniqueIdentifier>
+      <UniqueIdentifier>{22EA3D38-BC1E-49E3-AC3E-2BA34496CE92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

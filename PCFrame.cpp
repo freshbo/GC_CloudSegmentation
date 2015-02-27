@@ -6,7 +6,6 @@
 	{
 		original.reset(new PointCloudT());				//PointCloud to work with
 		
-		
 		ID = "";									//name in viewer
 		cloud.reset(new PointCloudT());				//PointCloud to work with
 		normal.reset(new PointCloudN());			//Normals

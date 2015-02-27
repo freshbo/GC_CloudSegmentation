@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 26. Feb 18:33:09 2015
+** Created: Thu 26. Feb 22:21:11 2015
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -47,6 +47,7 @@ public:
     QGridLayout *gridLayout;
     QVBoxLayout *Operations_Line_LAYOUT;
     QHBoxLayout *Operations_LAYOUT;
+    QFrame *line_9;
     QVBoxLayout *General_LAYOUT;
     QLabel *General_LABEL;
     QPushButton *loadButton;
@@ -66,6 +67,7 @@ public:
     QLabel *label_3;
     QPushButton *MultiLeafButton;
     QRadioButton *ShowLeafs;
+    QFrame *line_8;
     QSpacerItem *horizontalSpacer;
     QVBoxLayout *Sampling_LAYOUT;
     QLabel *Sampling_LABEL;
@@ -126,6 +128,13 @@ public:
         Operations_LAYOUT = new QHBoxLayout();
         Operations_LAYOUT->setSpacing(6);
         Operations_LAYOUT->setObjectName(QString::fromUtf8("Operations_LAYOUT"));
+        line_9 = new QFrame(centralWidget);
+        line_9->setObjectName(QString::fromUtf8("line_9"));
+        line_9->setFrameShape(QFrame::VLine);
+        line_9->setFrameShadow(QFrame::Sunken);
+
+        Operations_LAYOUT->addWidget(line_9);
+
         General_LAYOUT = new QVBoxLayout();
         General_LAYOUT->setSpacing(6);
         General_LAYOUT->setObjectName(QString::fromUtf8("General_LAYOUT"));
@@ -254,6 +263,13 @@ public:
 
 
         Operations_LAYOUT->addLayout(verticalLayout_3);
+
+        line_8 = new QFrame(centralWidget);
+        line_8->setObjectName(QString::fromUtf8("line_8"));
+        line_8->setFrameShape(QFrame::VLine);
+        line_8->setFrameShadow(QFrame::Sunken);
+
+        Operations_LAYOUT->addWidget(line_8);
 
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -486,16 +502,16 @@ public:
         actionStems->setText(QApplication::translate("MainWindow", "Stems", 0, QApplication::UnicodeUTF8));
         General_LABEL->setText(QApplication::translate("MainWindow", "PointCloud", 0, QApplication::UnicodeUTF8));
         loadButton->setText(QApplication::translate("MainWindow", "Load", 0, QApplication::UnicodeUTF8));
-        ShowOriginal->setText(QApplication::translate("MainWindow", "ShowOriginal", 0, QApplication::UnicodeUTF8));
+        ShowOriginal->setText(QApplication::translate("MainWindow", "Original", 0, QApplication::UnicodeUTF8));
         CurvatureLAYOUT->setText(QApplication::translate("MainWindow", "Curvature", 0, QApplication::UnicodeUTF8));
         computeCurvature->setText(QApplication::translate("MainWindow", "Calculate", 0, QApplication::UnicodeUTF8));
-        CurvColorCode->setText(QApplication::translate("MainWindow", "ShowColor", 0, QApplication::UnicodeUTF8));
+        CurvColorCode->setText(QApplication::translate("MainWindow", "Curvature", 0, QApplication::UnicodeUTF8));
         BinarySeg_LABEL->setText(QApplication::translate("MainWindow", "Leaf- Stem", 0, QApplication::UnicodeUTF8));
         SegmentButton->setText(QApplication::translate("MainWindow", "Segmentation", 0, QApplication::UnicodeUTF8));
-        SegColorCode->setText(QApplication::translate("MainWindow", "ShowColor", 0, QApplication::UnicodeUTF8));
+        SegColorCode->setText(QApplication::translate("MainWindow", "Binary Seg.", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWindow", "Multi-Leaf", 0, QApplication::UnicodeUTF8));
         MultiLeafButton->setText(QApplication::translate("MainWindow", "Segmentation", 0, QApplication::UnicodeUTF8));
-        ShowLeafs->setText(QApplication::translate("MainWindow", "ShowLeafs", 0, QApplication::UnicodeUTF8));
+        ShowLeafs->setText(QApplication::translate("MainWindow", "Multi-Leaf", 0, QApplication::UnicodeUTF8));
         Sampling_LABEL->setText(QApplication::translate("MainWindow", "DownSampling", 0, QApplication::UnicodeUTF8));
         sampleButton->setText(QApplication::translate("MainWindow", "Sample", 0, QApplication::UnicodeUTF8));
         sampleNumberField->setText(QString());

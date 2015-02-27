@@ -24,7 +24,14 @@ include_directories (${PCL_INCLUDE_DIRS} C:/Qt/4.8.0/include L:/Libraries/Geomet
 link_directories    (${PCL_LIBRARY_DIRS} L:/Libraries/GeometricTools/WildMagic5/SDK/Library/v100)
 add_definitions     (${PCL_DEFINITIONS})
 
-set  (project_SOURCES main.cpp mainwindow.cpp operation.cpp PCFrame.cpp graph.cpp maxflow.cpp global.cpp mainwindow.h operation.h PCFrame.h block.h graph.h global.h)
+set  (project_SOURCES 
+        main.cpp mainwindow.cpp operation.cpp 
+        PCFrame.cpp graph.cpp maxflow.cpp global.cpp
+        GCoptimization.cpp LinkedBlockList.cpp
+        mainwindow.h operation.h PCFrame.h 
+        block.h graph.h global.h energy.h 
+        GCoptimization.h LinkedBlockList.h)
+        
 set  (project_FORMS   mainwindow.ui)
 set  (VTK_LIBRARIES   vtkRendering vtkGraphics vtkHybrid QVTK)
 set  (CMAKE_AUTOMOC TRUE)

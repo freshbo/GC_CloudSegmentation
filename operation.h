@@ -7,6 +7,14 @@
 #include <list>
 #include <set>
 
+//Alpha-Expansion
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include <time.h>
+#include "GCoptimization.h"
+
 //include boost Shared Pointers
 #include <boost/shared_ptr.hpp>
 
@@ -87,9 +95,9 @@ namespace Segmentation
 	void				filterBinary(PointCloudT::Ptr cloud, vector<int>*labels); //NOT YET IMPLEMENTED
 	
 	//MultiLeaf
-	void				getConnectedLeafs(PointCloudT::Ptr,vectorCloud,vector<int>);
+	void				getConnectedLeafs(PointCloudT::Ptr,vectorCloud,vector<int>*);
 	void				getlargeComponents(PointCloudT::Ptr,vector<int>,int,vectorCloud);
-
+	void				multiOrganSegmentation(PointCloudT::Ptr /*L or S*/, vectorCloud O_t , vector<int>*labelsO,/* Output*/ vectorCloud leafs,vector<int>*LeafLabels);
 	//MultiStem
 }
 
