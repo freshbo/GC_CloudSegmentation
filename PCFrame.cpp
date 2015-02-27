@@ -27,6 +27,7 @@
 		binSeg	=	false;
 		down	=	false;
 		tri		=	false;
+		leafSeg =	false;
 		
 		
 	}

@@ -35,6 +35,7 @@ class MainWindow : public QMainWindow
 		//Loading
 		void		loadPC(void);
 		void		loadFrame(void);
+		void		deletePC(void);
 		//Computation
 		void		downsample(void);
 		void		computeCurvature(void);

@@ -35,6 +35,7 @@ struct hypothesis
 	bool binSeg;
 	bool down;
 	bool tri;
+	bool leafSeg;
 
 
 	//viewer Update:

@@ -43,6 +43,7 @@ namespace operation
 		if(cloud->size()==0)
 			return numeric_limits<float>::infinity(); //Return Infinity If cloud is Empty
 		int K = 1;
+		
 		pcl::KdTreeFLANN<pcl::PointXYZRGBA> kdTree;
 		vector <int> pointIdx;
 		vector <float> sqDist;
@@ -399,11 +400,12 @@ namespace Segmentation
 		mesh.reset(new pclMesh);
 
 		//function Calls
-		operation::downsample(L,L,0.1); //sample L high resolution is not in this step
+		int sampleSize = 0.2;
+		operation::downsample(L,L,sampleSize); //sample L high resolution is not in this step
 		operation::calcCurvature(L,normal_L); //Normal estimation on sampled L 
 		parts = operation::PCLtriangulation(L,normal_L,mesh); //Triangulate L
 		
-		int min = 1000; //Min number needed to be recognised as Leaf
+		int min = (1000); //Min number needed to be recognised as Leaf
 		getlargeComponents(/*Cloud*/L,/*ConnectedComponentIndex*/parts,/*MinNumber to be recognised*/min,/*return*/leafs);
 		for(int i=0;i<leafs->size();i++)
 		{
@@ -459,7 +461,7 @@ namespace Segmentation
 		-O_neigh = Organs from a neighboring Frame (Forward or Backward)
 		-labels_cur = current labels of the organs (this is going to be the 
 		*/
-		operation::downsample(L,L,0.5);
+		
 		GCoptimizationGeneralGraph *gc = new GCoptimizationGeneralGraph(L->size(),labelsO->size());
 		
 		pclMesh::Ptr mesh(new pclMesh); 

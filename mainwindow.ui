@@ -503,6 +503,7 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="deleteAction"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -533,6 +534,11 @@
   <action name="actionStems">
    <property name="text">
     <string>Stems</string>
+   </property>
+  </action>
+  <action name="deleteAction">
+   <property name="text">
+    <string>Delete</string>
    </property>
   </action>
  </widget>

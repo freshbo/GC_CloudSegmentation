@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 26. Feb 22:21:11 2015
+** Created: Fri 27. Feb 02:51:44 2015
 **      by: Qt User Interface Compiler version 4.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -43,6 +43,7 @@ public:
     QAction *actionClear_Clouds;
     QAction *ShowLeafss;
     QAction *actionStems;
+    QAction *deleteAction;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QVBoxLayout *Operations_Line_LAYOUT;
@@ -116,6 +117,8 @@ public:
         ShowLeafss->setCheckable(true);
         actionStems = new QAction(MainWindow);
         actionStems->setObjectName(QString::fromUtf8("actionStems"));
+        deleteAction = new QAction(MainWindow);
+        deleteAction->setObjectName(QString::fromUtf8("deleteAction"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -486,6 +489,7 @@ public:
         menuBar->addAction(menuEdit->menuAction());
         menuFile->addAction(actionLoad);
         menuFile->addAction(actionExit);
+        menuEdit->addAction(deleteAction);
 
         retranslateUi(MainWindow);
 
@@ -500,6 +504,7 @@ public:
         actionClear_Clouds->setText(QApplication::translate("MainWindow", "Clear Clouds", 0, QApplication::UnicodeUTF8));
         ShowLeafss->setText(QApplication::translate("MainWindow", "Leafs", 0, QApplication::UnicodeUTF8));
         actionStems->setText(QApplication::translate("MainWindow", "Stems", 0, QApplication::UnicodeUTF8));
+        deleteAction->setText(QApplication::translate("MainWindow", "Delete", 0, QApplication::UnicodeUTF8));
         General_LABEL->setText(QApplication::translate("MainWindow", "PointCloud", 0, QApplication::UnicodeUTF8));
         loadButton->setText(QApplication::translate("MainWindow", "Load", 0, QApplication::UnicodeUTF8));
         ShowOriginal->setText(QApplication::translate("MainWindow", "Original", 0, QApplication::UnicodeUTF8));

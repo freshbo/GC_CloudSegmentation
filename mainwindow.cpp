@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
 	//Load Point Clouds, Frames
 	connect (ui->actionLoad,		SIGNAL(triggered()),this,			SLOT(loadFrame())); //not yet implemented
     connect (ui->loadButton,		SIGNAL(released()),this,			SLOT(loadPC()));
+	connect (ui->deleteAction,		SIGNAL(triggered()),this,			SLOT(deletePC()));
 	//Controller: Which PointCloud can be seen?
 	connect (ui->FrameScrollBar,	SIGNAL(valueChanged(int)), this,	SLOT(frameScroll(int)));
 	//Calculate Curvature, Segmentations, Downsampling,Triangulation
@@ -99,7 +100,14 @@ void MainWindow::loadPC(void)
 	showCloud();
 
 }
+void MainWindow::deletePC(void)
+{
+	ui->FrameScrollBar->setMaximum(t-1);
+	showCloud();
+	Frame.erase(Frame.begin()+t);
 
+	
+}
 void MainWindow::loadFrame(void)
 {
 	/*
@@ -265,24 +273,31 @@ void MainWindow::LeafSeg(void)
 	if(Frame[t]->binSeg==false){
 		BinSeg();
 		Frame[t]->binSeg=true;
-		Frame[t]->leafs->clear();
 	}
-	if(t==0)
-	{
-		cout<<"Get Connected Components...";
-		Segmentation::getConnectedLeafs(Frame[t]->L,/*vectorCloud*/Frame[t]->leafs,&Frame[t]->LeafLabels);
-		cout<<" DONE"<<" ";
-		cout<<"Found "<<Frame[t]->LeafLabels.size()<<" mature Leafs"<<endl;
-		
-		operation::colorizeLeafClusters(Frame[t]->leafs,Frame[t]->LeafLabels);
-		Frame[t]->renderSeq=-1;
-		showCloud();
-		return;
-	}else
-		Segmentation::multiOrganSegmentation(Frame[t]->L,Frame[t-1]->leafs,&Frame[t-1]->LeafLabels,/*Output:*/Frame[t]->leafs,&Frame[t]->LeafLabels);
-	operation::colorizeLeafClusters(Frame[t]->leafs,Frame[t]->LeafLabels);	
-	showCloud();
-				
 	
+		
+	Frame[t]->leafs->clear();
+	Frame[t]->LeafLabels.clear();
+	cout<<"Get Connected Components...";
+	Segmentation::getConnectedLeafs(Frame[t]->L,/*vectorCloud*/Frame[t]->leafs,&Frame[t]->LeafLabels);
+	cout<<" DONE"<<" ";
+	cout<<"Found "<<Frame[t]->LeafLabels.size()<<" mature Leafs"<<endl;
+		
+	operation::colorizeLeafClusters(Frame[t]->leafs,Frame[t]->LeafLabels);
+	
+	if(t>0){
+		if(Frame[t-1]->leafSeg ==false){
+		t--;
+		LeafSeg();
+		t++;
+	}
+		Frame[t]->leafs->clear();
+		Segmentation::multiOrganSegmentation(Frame[t]->L,Frame[t-1]->leafs,&Frame[t-1]->LeafLabels,/*Output:*/Frame[t]->leafs,&Frame[t]->LeafLabels);
+	}
+	operation::colorizeLeafClusters(Frame[t]->leafs,Frame[t]->LeafLabels);	
+		
+	Frame[t]->renderSeq=-1;
+	showCloud();
+	Frame[t]->leafSeg = true;
 }
 
