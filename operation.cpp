@@ -400,7 +400,7 @@ namespace Segmentation
 		mesh.reset(new pclMesh);
 
 		//function Calls
-		int sampleSize = 0.2;
+		int sampleSize = 0.4;
 		operation::downsample(L,L,sampleSize); //sample L high resolution is not in this step
 		operation::calcCurvature(L,normal_L); //Normal estimation on sampled L 
 		parts = operation::PCLtriangulation(L,normal_L,mesh); //Triangulate L
@@ -462,21 +462,29 @@ namespace Segmentation
 		-labels_cur = current labels of the organs (this is going to be the 
 		*/
 		
-		GCoptimizationGeneralGraph *gc = new GCoptimizationGeneralGraph(L->size(),labelsO->size());
+		GCoptimizationGeneralGraph *gc = new GCoptimizationGeneralGraph(L->size(),LeafLabels->size());
 		
+		operation::downsample(L,L,1);
+
 		pclMesh::Ptr mesh(new pclMesh); 
 		PointCloudN::Ptr normal(new PointCloudN);
 		operation::calcCurvature(L,normal);
 		operation::PCLtriangulation(L,normal,mesh);
 
+		
 		//SET T-LINKS
 		cout<<"set T-Links for "<< L->points.size()<<" "<<endl;
 		for(int i=0;i<L->points.size();i++){						//all points
-			for(int l=0;l<labelsO->size();l++)			//all labels
+			for(int l=0;l<LeafLabels->size();l++)					//all labels
 			{			
 				pcl::PointXYZRGBA p = L->points[i];
-				double d = operation::dist(p, O_t->at(l));
-				gc->setDataCost(i,l,d);
+				if(l<O_t->size()){
+					double d = operation::dist(p, O_t->at(l));
+					gc->setDataCost(i,l,d);
+				}
+				else{
+					gc->setDataCost(i,l,5);
+				}
 			}
 		}
 		
@@ -493,26 +501,29 @@ namespace Segmentation
 
 		}
 		//Set Smoothnes Cost
-		for ( int l1 = 0; l1 < labelsO->size(); l1++ ){
-				for (int l2 = 0; l2 < labelsO->size(); l2++ ){
-					int cost = l1==l2 ? 0:1;
+		for ( int l1 = 0; l1 < LeafLabels->size(); l1++ ){
+				for (int l2 = 0; l2 < LeafLabels->size(); l2++ ){
+					int cost = l1==l2 ? 0:5;
 					gc->setSmoothCost(l1,l2,cost);
 
 			}
 		}
 		cout<<"start Alpha expansion... "<<endl;
 		printf("\nBefore optimization energy is %d",gc->compute_energy());
-		gc->expansion(2);// run expansion for 2 iterations. For swap use gc->swap(num_iterations);
+		gc->expansion();
 		printf("\nAfter optimization energy is %d",gc->compute_energy());
 		cout<<"DONE"<<endl;
 
 
-		
+		int size = LeafLabels->size();
 		LeafLabels->clear();
-		for(int i=0;i<labelsO->size();i++){
+		for(int i=0;i<size;i++){
 			PointCloudT::Ptr tmp_Ptr;
 			tmp_Ptr.reset(new PointCloudT);
-			LeafLabels->push_back(labelsO->at(i));
+			if(i<labelsO->size())
+				LeafLabels->push_back(labelsO->at(i));
+			else
+				LeafLabels->push_back(i);
 			leafs->push_back(tmp_Ptr);
 		}
 		for(int i=0;i<L->size();i++)
